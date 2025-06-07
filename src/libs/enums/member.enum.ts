@@ -7,6 +7,7 @@ export enum MemberStatus {
     ACTIVE = "ACTIVE",
     INACTIVE = "INACTIVE",
     BLOCKED = "BLOCKED",
+    DELETE = "DELETE"
 }
 export enum subjectType {
     MATH = "MATH",

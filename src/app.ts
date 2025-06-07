@@ -4,8 +4,18 @@ import path from 'path';
 import routerAdmin from './router-admin';
 import morgan from 'morgan';
 import { MORGAN_FORMAT } from './libs/utils/config';
-
+import studentRouter from './student-router';
+import session from 'express-session';
 /** 1 ENTRAMCE */
+import ConnectMongoDB from 'connect-mongodb-session';
+import { T } from './libs/types/common';
+const MongoDBStore = ConnectMongoDB(session);
+const store = new MongoDBStore({
+    uri: String(process.env.MONGO_URI), 
+    collection: 'sessions' 
+});
+
+
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public'))); 
@@ -15,6 +25,13 @@ app.use(morgan(MORGAN_FORMAT))
 
 
 /** 2 SESSION */
+app.use(session({  
+    secret: String(process.env.SESSION_SECRET), 
+    cookie: { maxAge: 1000 * 3600 * 3 }, 
+    store: store,  
+    resave: true, 
+    saveUninitialized: true, 
+}));
 
 
 
@@ -24,6 +41,7 @@ app.set('view engine', 'ejs');
 
 /** 4 ROUTES */
 app.use("/admin", routerAdmin);
+app.use("/",studentRouter)
 
 export default app;  
 

@@ -5,7 +5,7 @@ const routerAdmin = express.Router();
 
 routerAdmin.get("/", adminController.goHome);
 
-routerAdmin
+routerAdmin 
   .get("/signup", adminController.getSignup)
   .post("/signup", adminController.postSignup);
 routerAdmin
