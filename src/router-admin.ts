@@ -1,13 +1,14 @@
 import express from 'express';
 import adminController from './controller/admin.controller';
-import e from 'express';
+
 const routerAdmin = express.Router();
 
+routerAdmin.get("/", adminController.goHome);
 
-routerAdmin.get("/", adminController.goHome);  
-routerAdmin.get("/getlogin", adminController.getLogin);  
-routerAdmin.get("/getsignup", adminController.getSignup);
-
-
-
+routerAdmin
+  .get("/signup", adminController.getSignup)
+  .post("/signup", adminController.postSignup);
+routerAdmin
+  .get("/login",adminController.getLogin)
+  .post("/login",adminController.postLogin)
 export default routerAdmin;

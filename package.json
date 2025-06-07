@@ -12,14 +12,19 @@
   "author": "sherzod_dev",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "express-session": "^1.18.1",
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.2",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/connect-mongodb-session": "^2.4.8",
     "@types/express": "^4.17.3",
+    "@types/express-session": "^1.18.2",
     "@types/morgan": "^1.9.9",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.1",

@@ -5,7 +5,6 @@ import routerAdmin from './router-admin';
 import morgan from 'morgan';
 import { MORGAN_FORMAT } from './libs/utils/config';
 
-
 /** 1 ENTRAMCE */
 const app = express();
 
@@ -27,3 +26,4 @@ app.set('view engine', 'ejs');
 app.use("/admin", routerAdmin);
 
 export default app;  
+
