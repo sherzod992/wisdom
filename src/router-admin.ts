@@ -8,7 +8,24 @@ routerAdmin.get("/", adminController.goHome);
 routerAdmin 
   .get("/signup", adminController.getSignup)
   .post("/signup", adminController.postSignup);
+
 routerAdmin
   .get("/login",adminController.getLogin)
   .post("/login",adminController.postLogin)
+
+routerAdmin.get("/logout", adminController.logout);
+
+routerAdmin.get("/check-me", adminController.checkAuthSession);
+routerAdmin.get(
+  "/student/all",
+  adminController.getAllStudents
+);
+routerAdmin.get(
+  "/teacher/all",
+  adminController.getAllTeacher
+);
+routerAdmin.get(
+  "/dashboard",adminController.dashboard
+);
+routerAdmin.post("/user/edit",adminController.updateChosenUser);
 export default routerAdmin;

@@ -1,0 +1,70 @@
+<%- include('includes/header') %>
+<link rel="stylesheet" href="/css/students.css">
+<body>
+  <div class="students-container">
+    <% if (!member) { %>
+      <nav>
+        <a href="/admin/dashboard" class="logo">Wisdom Admin</a>
+
+        <div class="auth-buttons">
+          <a class="signup" href="/admin/signup">Sign in Or Sign up</a>
+        </div>
+      </nav>
+
+    <div class="students-frame">
+      <div class="board" ><h1>Please login first!</h1></div>
+    </div>
+
+    <% } else { %>
+    <div class="navigation-menu">
+      <ul class="nav justify-content-center">
+        <li class="nav-item"><a class="nav-link active" href="/admin/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/admin/teacher/all">Teachers</a></li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/logout" onclick="return confirm('Do you really want to logout?')">Logout</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="students-frame">
+      <div class="board">
+        <div class="user-table">
+          <span class="header-name" style="margin-bottom: 30px">All Students List</span>
+          <table class="table table-hover table-sm">
+            <thead class="thead-light">
+              <tr class="thead-light">
+                <th>No</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Subject</th>
+              </tr>
+            </thead>
+            <tbody style="background: white">
+              <% students.map(function(student, index) { %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= student.memberNick %></td>
+                  <td><%= student.memberPhone %></td>
+                  <td>
+                    <select class="spec-select student-status" id="<%= student._id %>">
+                      <option value="ACTIVE" <%= student.memberStatus === "ACTIVE" ? "selected" : "" %>>ACTIVE</option>
+                      <option value="BLOCK" <%= student.memberStatus === "BLOCK" ? "selected" : "" %>>BLOCK</option>
+                      <option value="DELETE" <%= student.memberStatus === "DELETE" ? "selected" : "" %>>DELETE</option>
+                    </select>
+                  </td>
+                  <td><%= student.subject || "N/A" %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <script src="/js/students.js"></script>
+</body>
+
+<%- include('includes/footer') %>

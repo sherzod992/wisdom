@@ -1,0 +1,75 @@
+<%- include('includes/header') %>
+
+<link rel="stylesheet" href="/css/teacher.css">
+
+
+<body>
+  <div class="students-container">
+    <% if (!member) { %>
+      <nav>
+        <a href="/admin/dashboard" class="logo">Wisdom Admin</a>
+
+        <div class="auth-buttons">
+          <a class="signup" href="/admin/signup">Sign in Or Sign up</a>
+        </div>
+      </nav>
+
+      <div class="students-frame">
+        <div class="board">
+          <h1>Please login first!</h1>
+        </div>
+      </div>
+
+    <% } else { %>
+      <div class="navigation-menu">
+        <ul class="nav justify-content-center">
+          <li class="nav-item"><a class="nav-link active" href="/admin/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/admin/student/all">Students</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/logout" onclick="return confirm('Do you really want to logout?')">Logout</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="students-frame">
+        <div class="board">
+          <div class="user-table">
+            <span class="header-name" style="margin-bottom: 30px">All Teachers List</span>
+            <table class="table table-hover table-sm">
+              <thead class="thead-light">
+                <tr class="thead-light">
+                  <th>No</th>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Subject</th>
+                </tr>
+              </thead>
+              <tbody style="background: white">
+                <% teachers.map(function(teacher, index) { %>
+                  <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= teacher.memberNick %></td>
+                    <td><%= teacher.memberPhone %></td>
+                    <td>
+                      <select class="spec-select teacher-status" id="<%= teacher._id %>">
+                        <option value="ACTIVE" <%= teacher.memberStatus === "ACTIVE" ? "selected" : "" %>>ACTIVE</option>
+                        <option value="BLOCK" <%= teacher.memberStatus === "BLOCK" ? "selected" : "" %>>BLOCK</option>
+                        <option value="DELETE" <%= teacher.memberStatus === "DELETE" ? "selected" : "" %>>DELETE</option>
+                      </select>
+                    </td>
+                    <td><%= teacher.subject || "N/A" %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+
+  <script src="/js/teachers.js"></script>
+</body>
+
+<%- include('includes/footer') %>

@@ -1,12 +1,13 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AdminRequest, LoginInput, MemberInput } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
 import MemberService from "../models/Member.service";
-import Errors, { Message } from "../libs/utils/Errors";
+import Errors, { HttpCode, Message } from "../libs/utils/Errors";
 import { T } from "../libs/types/common";
 
 
-const adminController:T={}
+const adminController:T={};
+const memberService = new MemberService();
  adminController.goHome =(req:Request, res:Response)  => {
     try {
       console.log("home");
@@ -15,27 +16,27 @@ const adminController:T={}
       console.error(err);
       res.status(500).send("Server error");
     }
-  },
+  }
 
   adminController.getLogin=(req: Request, res: Response) => {
     try {
       console.log("Admin getLogin");
-      res.send("Admin getLogin");
+      res.render("login")
     } catch (err) {
       console.error(err);
       res.status(500).send("Server error");
     }
-  },
+  }
 
   adminController.getSignup=(req: Request, res: Response) => {
     try {
       console.log("Admin getSignup");
-      res.send("Admin getSignup");
+      res.render("signup")
     } catch (err) {
       console.error(err);
       res.status(500).send("Server error");
     }
-  },
+  }
 
   adminController.postSignup=async (req: AdminRequest, res: Response) => {
     try {
@@ -43,8 +44,6 @@ const adminController:T={}
 
       const newMember: MemberInput = req.body;
       newMember.memberType = MemberType.ADMIN;
-
-      const memberService = new MemberService();
       const result = await memberService.postSignup(newMember);
       req.session.member = result
       req.session.save(function(){
@@ -85,6 +84,76 @@ const adminController:T={}
     }
 };
 
-  
+adminController.getAllStudents = async (req:AdminRequest, res: Response)=>{
+  try {
+    console.log("getUsers");
+    const result = await memberService.getAllStudents();
+    console.log("result", result);
+    res.render("students", {students: result,
+      member: req.session.member, });
+  } catch (err) {
+    console.log("ERROR, getUsers", err);
+  }
+}
+adminController.getAllTeacher = async(req:AdminRequest, res: Response)=>{
+  try {
+    console.log("getAllTeacher");
+    const teacher = await memberService.getAllTeacher();
+    console.log("result", teacher);
+    res.render("teachers", { teachers: teacher, member: req.session.member });
+  } catch (err) {
+    console.log("ERROR, getUsers", err);
+  }
+}
+adminController.updateChosenUser = async (req: Request, res: Response) => {
+  try {
+    console.log("updateChosenUser");
+    const result = await memberService.updateChosenUser(req.body);
+    res.status(HttpCode.OK).json({ data: result });
+  } catch (err) {
+    console.log("Error, updateChosenUser", err);
+    if (err instanceof Errors)
+      res.status(err.code).json(err);
+    else
+      res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+adminController.verifyAdmin = (
+  req: AdminRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.session?.member?.memberType === MemberType.ADMIN) {
+      req.member = req.session.member;
+      next();
+  } else {
+      const message = Message.NOT_AUTHENTICATED;
+      res.send(`<script>alert("${message}"); window.location.replace('admin/login')</script>`);
+  }
+};
+adminController.logout = (req: AdminRequest, res: Response) => {
+  try {
+      console.log("logout");
+      req.session.destroy((err) => {
+          res.redirect("/admin");
+      });
+  } catch (err) {
+      console.log("Error, logout", err);
+      res.redirect("/admin");
+  }
+};
+/** Yangi qisimlar **/
+
+adminController.dashboard = async (req:Request, res:Response)=>{
+  try {
+    const stats = await memberService.getDashboardStats();
+    res.render("dashboard", stats);
+  } catch (err) {
+    console.error("Dashboard error:", err);
+    res.status(500).send("Dashboard yuklanmadi");
+  }
+}
+ 
 
 export default adminController;

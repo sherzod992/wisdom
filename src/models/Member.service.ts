@@ -1,18 +1,20 @@
 import MemberModel from "../schema/Member.model";
-import { MemberInput, Member, LoginInput } from "../libs/types/member";
+import { MemberInput, Member, LoginInput, MemberUpdateInput } from "../libs/types/member";
 import { MemberStatus, MemberType } from "../libs/enums/member.enum";
 import Errors from "../libs/utils/Errors";
 import { HttpCode, Message } from "../libs/utils/Errors";
 import * as bcrypt from "bcryptjs";
+import { shapeIntoMongooseObjectId } from "../libs/utils/config";
+
 class MemberService {
   private readonly memberModel;
+
 
   constructor() {
     this.memberModel = MemberModel;
   }
 
   /** SPA Students Page **/
-
   public async signup(input: MemberInput): Promise<Member> {
     const salt = await bcrypt.genSalt();
     input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
@@ -66,7 +68,7 @@ class MemberService {
 
 
 
-
+/**SSR Admin panel */
   public async postSignup(input: MemberInput): Promise<Member> {
     // const exist = await this.memberModel
     //   .findOne({ memberType: MemberType.ADMIN })
@@ -101,6 +103,66 @@ class MemberService {
   
     return result.toObject() as unknown as Member;
   }
+  public async getAllStudents(): Promise<Member[]> {
+    const result = await this.memberModel
+        .find({ memberType: MemberType.STUDENT })
+        .lean<Member[]>()
+        .exec();
+
+    if (!result || result.length === 0) {
+        throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    }
+
+    return result;
+}
+
+public async getAllTeacher(): Promise<Member[]> {
+    const result = await this.memberModel
+        .find({ memberType: MemberType.TEACHER })
+        .lean<Member[]>()
+        .exec();
+        
+    if (!result || result.length === 0) {
+        throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    }
+
+    return result;
+}
+  public async updateChosenUser(input: MemberUpdateInput): Promise<Member> {
+    input._id = shapeIntoMongooseObjectId(input._id);
+
+    const result = await this.memberModel
+        .findOneAndUpdate(
+            { _id: input._id },
+            input,
+            { new: true }
+        )
+        .lean<Member>() // 단일 문서 반환 타입으로 수정
+        .exec();
+
+    if (!result) {
+        throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    }
+
+    return result; // 반환값이 항상 Member 타입이 되도록 보장
+}
+public async getDashboardStats(): Promise<any> {
+  const totalStudents = await this.memberModel.countDocuments({ memberType: MemberType.STUDENT });
+  const totalTeachers = await this.memberModel.countDocuments({ memberType: MemberType.TEACHER });
+
+  const recentUsers = await this.memberModel
+    .find({ createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } })
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .lean<Member[]>(); // 최근 사용자 목록 반환
+
+  return {
+    totalStudents,
+    totalTeachers,
+    recentUsers,
+    };
+  }
+  
   
 }
 
