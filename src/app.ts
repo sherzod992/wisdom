@@ -4,7 +4,7 @@ import path from 'path';
 import routerAdmin from './router-admin';
 import morgan from 'morgan';
 import { MORGAN_FORMAT } from './libs/utils/config';
-import studentRouter from './student-router';
+import studentRouter from './router';
 import session from 'express-session';
 /** 1 ENTRAMCE */
 import ConnectMongoDB from 'connect-mongodb-session';

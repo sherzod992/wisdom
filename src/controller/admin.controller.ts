@@ -58,7 +58,6 @@ const memberService = new MemberService();
     try{
       console.log("processLogin");
       const input: LoginInput = req.body;
-      const memberService = new MemberService();
       const result = await memberService.postLogin(input)
       req.session.member = result
       req.session.save(function(){

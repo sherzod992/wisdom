@@ -27,5 +27,10 @@ routerAdmin.get(
 routerAdmin.get(
   "/dashboard",adminController.dashboard
 );
+// routerAdmin.post(
+//   "/product/:id",// method get() 📍 Endpoint (URL) => Admin  sahifasiga kirganda
+//   adminController.verifyAdmin,// 🔐 Middleware =>(Authorization) Avval `Restaurant` admin ekanligini tekshiradi 
+//   productController.updateChosenProduct//Handler => Ruxsat bo‘lsa, barcha userlarni bazadan olib beradi
+// );
 routerAdmin.post("/user/edit",adminController.updateChosenUser);
 export default routerAdmin;

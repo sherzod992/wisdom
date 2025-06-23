@@ -16,6 +16,9 @@ class MemberService {
 
   /** SPA Students Page **/
   public async signup(input: MemberInput): Promise<Member> {
+    if (!input.memberNick || !input.memberPhone || !input.memberPassword) {
+      throw new Errors(HttpCode.BAD_REQUEST,Message.SOMETHING_WENT_WRONG);
+    }
     const salt = await bcrypt.genSalt();
     input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
   
@@ -29,6 +32,9 @@ class MemberService {
     }
   }
   public async login(input: LoginInput): Promise<Member> {
+    if (!input.memberNick || !input.memberPassword) {
+      throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
+    }
     const member = await this.memberModel.findOne(
       { memberNick: input.memberNick, memberStatus: { $ne: MemberStatus.DELETE } },
       { memberNick: 1, memberPassword: 1, memberStatus: 1 }
@@ -52,7 +58,19 @@ class MemberService {
   
     return result.toJSON() as unknown as Member;
   }
+  public async getMemberDetail(member: Member): Promise<Member> {
+    const memberId = shapeIntoMongooseObjectId(member._id);
+    const result = await this.memberModel
+      .findOne({ _id: memberId, memberStatus: MemberStatus.ACTIVE })
+      .lean<Member>() // lean()을 사용하여 순수 객체 반환
+      .exec();
   
+    if (!result) {
+      throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    }
+  
+    return result;
+  }
 
 
 
