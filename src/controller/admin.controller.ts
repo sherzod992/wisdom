@@ -8,11 +8,12 @@ import { T } from "../libs/types/common";
 
 const adminController:T={};
 const memberService = new MemberService();
-adminController.goHome = (req: AdminRequest, res: Response) => {
+adminController.goHome = async (req: AdminRequest, res: Response) => {
   try {
     console.log("home");
     const member = req.session.member || null;
-    res.render("home", { member });   
+    const stats = await memberService.getDashboardStats();
+    res.render("home",{ member, ...stats });   
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");

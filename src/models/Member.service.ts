@@ -168,16 +168,9 @@ public async getDashboardStats(): Promise<any> {
   const totalStudents = await this.memberModel.countDocuments({ memberType: MemberType.STUDENT });
   const totalTeachers = await this.memberModel.countDocuments({ memberType: MemberType.TEACHER });
 
-  const recentUsers = await this.memberModel
-    .find({ createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } })
-    .sort({ createdAt: -1 })
-    .limit(5)
-    .lean<Member[]>(); // 최근 사용자 목록 반환
-
   return {
     totalStudents,
     totalTeachers,
-    recentUsers,
     };
   }
   
