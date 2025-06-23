@@ -67,7 +67,9 @@ memberController.getMemberdetail = async (req:Request , res: Response)=>{
     else res.status(Errors.standard.code).json(Errors.standard )
 }
 }
-
+memberController.getTopStudents = async (req:Request, res:Response)=>{
+  
+}
 
 
 

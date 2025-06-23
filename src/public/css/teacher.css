@@ -6,8 +6,8 @@
   --text-primary: #ffffff;
   --text-secondary: #94a3b8;
   --bg-dark: #0a0a0a;
-  --bg-card: rgba(255, 255, 255, 0.1);
-  --border-color: rgba(255, 255, 255, 0.2);
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --border-color: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -20,104 +20,147 @@
 body {
   background-color: var(--bg-dark);
   color: var(--text-primary);
-  overflow-x: hidden;
-  line-height: 1.6;
+  padding-top: 80px;
 }
 
 nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 6rem;
+  padding: 1.2rem 6rem;
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   z-index: 100;
   backdrop-filter: blur(10px);
-  background: rgba(10, 10, 10, 0.8);
+  background: rgba(10, 10, 10, 0.9);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .logo {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
   text-decoration: none;
-  letter-spacing: -0.5px;
 }
 
 .nav-links {
   display: flex;
-  gap: 3rem;
+  gap: 2rem;
 }
 
-.nav-links a {
-  color: var(--text-primary);
+.nav-link {
+  color: var(--text-secondary);
   text-decoration: none;
-  font-size: 1rem;
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: 0.3s ease;
 }
 
-.nav-links a:hover {
+.nav-link:hover,
+.nav-link.active {
   color: var(--primary);
 }
 
-.auth-buttons {
-  display: flex;
-  gap: 1rem;
+.auth-buttons a {
+  padding: 0.6rem 1.2rem;
+  background: var(--primary);
+  color: var(--text-primary);
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s ease;
 }
 
-.auth-buttons a {
-  padding: 0.8rem 1.5rem;
-  border-radius: 12px;
-  border: none;
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
+.auth-buttons a:hover {
+  background: var(--primary-dark);
 }
-.signup {
-  background: var(--primary);
+
+.students-frame {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.board {
+  width: 100%;
+  max-width: 1100px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  padding: 2rem;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.board h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--text-secondary);
+}
+
+.header-name {
+  display: block;
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
-.signup:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
 }
 
-.hero {
-  padding: 8rem 6rem 6rem;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-.hero {
-  padding: 8rem 6rem 6rem;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  position: relative;
+.custom-table thead {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.hero-content {
-  max-width: 650px;
-  position: relative;
-  z-index: 2;
-}
-
-.students-frame h1 {
-  font-size: 6rem;
+.custom-table th,
+.custom-table td {
+  padding: 1rem;
   text-align: center;
-  line-height: 4.5;
-  margin-bottom: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -1px;
-  background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.custom-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.teacher-status {
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.teacher-status:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  nav {
+    padding: 1rem 2rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .students-frame {
+    padding: 1rem;
+  }
+
+  .header-name {
+    font-size: 1.3rem;
+  }
 }

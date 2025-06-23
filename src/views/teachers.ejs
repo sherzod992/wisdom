@@ -2,7 +2,6 @@
 
 <link rel="stylesheet" href="/css/teacher.css">
 
-
 <body>
   <div class="students-container">
     <% if (!member) { %>
@@ -21,23 +20,23 @@
       </div>
 
     <% } else { %>
-      <div class="navigation-menu">
-        <ul class="nav justify-content-center">
-          <li class="nav-item"><a class="nav-link active" href="/admin/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/admin/student/all">Students</a></li>
-          <li class="nav-item">
-            <a class="nav-link" href="/admin/logout" onclick="return confirm('Do you really want to logout?')">Logout</a>
-          </li>
-        </ul>
-      </div>
+      <nav>
+        <a href="/admin/" class="logo">Wisdom Admin</a>
+
+        <div class="nav-links">
+          <a class="nav-link active" href="/admin/">Home</a>
+          <a class="nav-link" href="/admin/student/all">Students</a>
+          <a class="nav-link" href="/admin/logout" onclick="return confirm('Do you really want to logout?')">Logout</a>
+        </div>
+      </nav>
 
       <div class="students-frame">
         <div class="board">
           <div class="user-table">
-            <span class="header-name" style="margin-bottom: 30px">All Teachers List</span>
-            <table class="table table-hover table-sm">
-              <thead class="thead-light">
-                <tr class="thead-light">
+            <span class="header-name">All Teachers List</span>
+            <table class="custom-table">
+              <thead>
+                <tr>
                   <th>No</th>
                   <th>Name</th>
                   <th>Phone</th>
@@ -45,14 +44,14 @@
                   <th>Subject</th>
                 </tr>
               </thead>
-              <tbody style="background: white">
+              <tbody>
                 <% teachers.map(function(teacher, index) { %>
                   <tr>
                     <td><%= index + 1 %></td>
                     <td><%= teacher.memberNick %></td>
                     <td><%= teacher.memberPhone %></td>
                     <td>
-                      <select class="spec-select teacher-status" id="<%= teacher._id %>">
+                      <select class="teacher-status" id="<%= teacher._id %>">
                         <option value="ACTIVE" <%= teacher.memberStatus === "ACTIVE" ? "selected" : "" %>>ACTIVE</option>
                         <option value="BLOCK" <%= teacher.memberStatus === "BLOCK" ? "selected" : "" %>>BLOCK</option>
                         <option value="DELETE" <%= teacher.memberStatus === "DELETE" ? "selected" : "" %>>DELETE</option>

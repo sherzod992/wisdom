@@ -8,15 +8,17 @@ import { T } from "../libs/types/common";
 
 const adminController:T={};
 const memberService = new MemberService();
- adminController.goHome =(req:Request, res:Response)  => {
-    try {
-      console.log("home");
-      res.render("home");  
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Server error");
-    }
+adminController.goHome = (req: AdminRequest, res: Response) => {
+  try {
+    console.log("home");
+    const member = req.session.member || null;
+    res.render("home", { member });   
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
   }
+};
+
 
   adminController.getLogin=(req: Request, res: Response) => {
     try {
@@ -47,7 +49,7 @@ const memberService = new MemberService();
       const result = await memberService.postSignup(newMember);
       req.session.member = result
       req.session.save(function(){
-        res.send(result)
+        res.redirect("/admin")
       })
     } catch (err:any) {
       console.error("Error, processSignup:", err);

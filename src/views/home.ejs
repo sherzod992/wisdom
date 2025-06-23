@@ -1,42 +1,59 @@
 <%- include('includes/header') %>
 <link rel="stylesheet" href="/css/home.css">
+
 <nav>
   <a href="/admin/" class="logo">Wisdom Admin</a>
   <div class="nav-links">
-    <a href="#">New Lessons</a>
-    <a href="#">New Students</a>
-    <a href="#">New Teachers</a>
+    <% if (member) { %>
+      <a href="/admin/teacher/all">New Teachers</a>
+      <a href="/admin/student/all">New Students</a>
+      <a href="#">New Lessons</a>
+    <% } %>
   </div>
+
   <div class="auth-buttons">
-    <a class="signup" href="/admin/signup">Sign in Or Sign up</a>
-    <a class="login" href="/admin/logout">Logout</a>
+    <% if (member) { %>
+      <a class="login" href="/admin/logout" onclick="return confirm('Do you want to logout?')">Logout</a>
+    <% } else { %>
+      <a class="signup" href="/admin/signup">Sign in Or Sign up</a>
+    <% } %>
   </div>
 </nav>
 
 <main class="hero">
   <div class="hero-content">
-    <h1>Welcome, Admin</h1>
+    <h1>
+      <% if (member) { %>
+        다시 오신 것을 환영합니다 <%= member.memberNick || "Admin" %> 님
+      <% } else { %>
+        Welcome, Admin
+      <% } %>
+    </h1>
     <p>여기에서 많은 것을 관리 할 수 있습니다</p>
 
-    <div class="cta-group">
-      <a href="/admin/teacher/all" class="cta-button">Teacher All</a>
-      <a href="/admin/student/all" class="cta-button-secondary">Student All</a>
-    </div>
+    <% if (member) { %>
+      <div class="cta-group">
+        <a href="/admin/teacher/all" class="cta-button">Teacher All</a>
+        <a href="/admin/student/all" class="cta-button-secondary">Student All</a>
+      </div>
 
-    <div class="stats-container">
-      <div class="stat-item">
-        <span class="stat-number">10+</span>
-        <span class="stat-label">Teachers All</span>
+      <div class="stats-container">
+        <div class="stat-item">
+          <span class="stat-number">10+</span>
+          <span class="stat-label">Teachers All</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">100+</span>
+          <span class="stat-label">O'quvchilar</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">5</span>
+          <span class="stat-label">Faol Kurslar</span>
+        </div>
       </div>
-      <div class="stat-item">
-        <span class="stat-number">100+</span>
-        <span class="stat-label">O'quvchilar</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">5</span>
-        <span class="stat-label">Faol Kurslar</span>
-      </div>
-    </div>
+    <% } else { %>
+      <p class="hero-note">Tizimga kirishingiz yoki ro‘yxatdan o‘tishingiz kerak</p>
+    <% } %>
   </div>
 
   <div class="hero-graphics">
@@ -48,4 +65,8 @@
     </div>
   </div>
 </main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script type="text/javascript" src="/js/home.js"></script>
+
 <%- include('includes/footer') %>
