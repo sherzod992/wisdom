@@ -1,0 +1,72 @@
+<%- include('includes/header') %>
+<link rel="stylesheet" href="/css/students.css" />
+
+<body>
+  <div class="students-container">
+    <nav>
+      <a href="/admin" class="logo">Wisdom Admin</a>
+      <% if (member) { %>
+        <div class="user-info">
+          <p>Welcome, <strong><%= member.memberNick %></strong></p>
+        </div>
+      <% } else { %>
+        <div class="auth-buttons">
+          <a class="signup" href="/admin/signup">Sign In / Sign Up</a>
+        </div>
+      <% } %>
+    </nav>
+
+    <main>
+      <h2>🆕 Oxirgi 10 kun ichida qo‘shilgan *Active* talabalar</h2>
+
+      <% if (students.length > 0) { %>
+        <table class="students-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Ism</th>
+              <th>Telefon</th>
+              <th>Ro'yxatdan o‘tgan vaqt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% students.forEach((student, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= student.fullName %></td>
+                <td><%= student.memberPhone %></td>
+                <td><%= new Date(student.createdAt).toLocaleDateString('uz-UZ') %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p>Hozircha yangi talabalar mavjud emas.</p>
+      <% } %>
+    </main>
+  </div>
+
+  <style>
+    .students-container {
+      padding: 2rem;
+      font-family: sans-serif;
+    }
+    .students-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .students-table th, .students-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    .students-table th {
+      background-color: #f2f2f2;
+      text-align: left;
+    }
+  </style>
+
+
+
+
+<%- include('includes/footer') %>

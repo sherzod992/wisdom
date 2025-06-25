@@ -175,6 +175,7 @@ nav {
   display: flex;
   gap: 4rem;
   margin-top: 2rem;
+  text-align: center;
 }
 
 .stat-item {
@@ -336,6 +337,7 @@ nav {
     flex-direction: column;
     align-items: center;
     gap: 2rem;
+    text-align: center;
   }
 
   .stat-item {

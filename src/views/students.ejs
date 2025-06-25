@@ -48,7 +48,7 @@
                     <td><%= student.memberNick %></td>
                     <td><%= student.memberPhone %></td>
                     <td>
-                      <select class="student-status" id="<%= student._id %>">
+                      <select class="member-status" id="<%= student._id %>">
                         <option value="ACTIVE" <%= student.memberStatus === "ACTIVE" ? "selected" : "" %>>ACTIVE</option>
                         <option value="BLOCK" <%= student.memberStatus === "BLOCK" ? "selected" : "" %>>BLOCK</option>
                         <option value="DELETE" <%= student.memberStatus === "DELETE" ? "selected" : "" %>>DELETE</option>
@@ -65,7 +65,9 @@
     <% } %>
   </div>
 
-  <script src="/js/students.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="/js/students.js"></script>
 </body>
 
 <%- include('includes/footer') %>

@@ -33,4 +33,6 @@ routerAdmin.get(
 //   productController.updateChosenProduct//Handler => Ruxsat bo‘lsa, barcha userlarni bazadan olib beradi
 // );
 routerAdmin.post("/user/edit",adminController.updateChosenUser);
+routerAdmin.get('/student/recent', adminController.getRecentActiveStudents);
+routerAdmin.get('/teacher/recent', adminController.getRecentActiveTeacher);
 export default routerAdmin;

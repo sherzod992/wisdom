@@ -2,6 +2,7 @@ import { ObjectId } from "mongoose";
 import { MemberStatus, MemberType } from "../enums/member.enum";
 import { Session } from "express-session";
 import { Request } from "express";
+import { LessonModel } from "../../schema/Lesson.model";
 
 export interface Member{
     _id: ObjectId;
@@ -62,3 +63,28 @@ export interface AdminRequest extends Request {
     // file: Express.Multer.File;
     // files: Express.Multer.File[];
 }
+
+
+
+
+
+/**Lesson ts */
+export const lessonService = {
+    async createLesson(data: {
+      title: string;
+      description?: string;
+      videoUrl: string;
+      teacherId: string;
+    }) {
+      return await LessonModel.create({
+        title: data.title,
+        description: data.description,
+        videoUrl: data.videoUrl,
+        teacher: data.teacherId
+      });
+    },
+  
+    async getAllLessons() {
+      return await LessonModel.find().populate('teacher');
+    }
+  };

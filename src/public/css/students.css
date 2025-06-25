@@ -23,6 +23,7 @@ body {
   padding-top: 80px;
 }
 
+/* Navbar */
 nav {
   display: flex;
   justify-content: space-between;
@@ -75,6 +76,7 @@ nav {
   background: var(--primary-dark);
 }
 
+/* Page Content */
 .students-frame {
   display: flex;
   justify-content: center;
@@ -106,6 +108,7 @@ nav {
   color: var(--text-primary);
 }
 
+/* Table */
 .custom-table {
   width: 100%;
   border-collapse: collapse;
@@ -129,21 +132,33 @@ nav {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
+/* Student Status Select */
 .student-status {
   padding: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.08);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   color: var(--text-primary);
   font-size: 0.9rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .student-status:focus {
   outline: none;
   border-color: var(--primary);
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
+.student-status option {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   nav {
     padding: 1rem 2rem;
@@ -162,5 +177,11 @@ nav {
 
   .header-name {
     font-size: 1.3rem;
+  }
+
+  .custom-table th,
+  .custom-table td {
+    font-size: 0.85rem;
+    padding: 0.75rem;
   }
 }

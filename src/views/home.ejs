@@ -5,14 +5,15 @@
     <a href="/admin/" class="logo">Wisdom Admin</a>
     <div class="nav-links">
       <% if (member) { %>
-        <a href="/admin/teacher/all">New Teachers</a>
-        <a href="/admin/student/all">New Students</a>
+        <a href="/admin/teacher/recent">New Teachers</a>
+        <a href="/admin/student/recent">New Students</a>
         <a href="#">New Lessons</a>
         <% } %>
     </div>
 
     <div class="auth-buttons">
       <% if (member) { %>
+        <a href=""class="login"><%= member.memberNick || "Admin" %></a>
         <a class="login" href="/admin/logout" onclick="return confirm('Do you want to logout?')">Logout</a>
         <% } else { %>
           <a class="signup" href="/admin/signup">Sign in Or Sign up</a>
@@ -35,6 +36,7 @@
         <div class="cta-group">
           <a href="/admin/teacher/all" class="cta-button">Teacher All</a>
           <a href="/admin/student/all" class="cta-button-secondary">Student All</a>
+    
         </div>
 
         <div class="stats-container">
@@ -50,11 +52,19 @@
           </div>
           <div class="stat-item">
             <span class="stat-number">5</span>
-            <span class="stat-label">Faol Kurslar</span>
+            <span class="stat-label">Faol Kurslar</span> 
+          </div>
+          <div class="stat-item">
+            <span class="stat-number"><%= totalBlckedStudents %></span>
+            <span class="stat-label">BlckedStudents</span> 
+          </div>
+          <div class="stat-item">
+            <span class="stat-number"><%= totalBlockedTeachers %></span>
+            <span class="stat-label">BlockedTeachers</span> 
           </div>
         </div>
         <% } else { %>
-          <p class="hero-note">Tizimga kirishingiz yoki ro‘yxatdan o‘tishingiz kerak</p>
+          <p class="hero-content">Tizimga kirishingiz uchun Login yoki ro‘yxatdan o‘tishingiz kerak</p>
           <% } %>
     </div>
 

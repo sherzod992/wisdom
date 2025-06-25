@@ -73,19 +73,6 @@ class MemberService {
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**SSR Admin panel */
   public async postSignup(input: MemberInput): Promise<Member> {
     // const exist = await this.memberModel
@@ -111,7 +98,7 @@ class MemberService {
     if (!member) {
       throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
     }
-    if (member.memberStatus === MemberStatus.BLOCKED) {
+    if (member.memberStatus === MemberStatus.BLOCK) {
       throw new Errors(HttpCode.FORBIDDEN, Message.BLOCKED_USER);
     }
     const result = await this.memberModel.findById(member._id).exec();
@@ -165,16 +152,33 @@ public async getAllTeacher(): Promise<Member[]> {
     return result; // 반환값이 항상 Member 타입이 되도록 보장
 }
 public async getDashboardStats(): Promise<any> {
-  const totalStudents = await this.memberModel.countDocuments({ memberType: MemberType.STUDENT });
-  const totalTeachers = await this.memberModel.countDocuments({ memberType: MemberType.TEACHER });
-
+  const totalStudents = await this.memberModel.countDocuments({ memberType: MemberType.STUDENT, memberStatus: MemberStatus.ACTIVE });
+  const totalTeachers = await this.memberModel.countDocuments({ memberType: MemberType.TEACHER,  memberStatus: MemberStatus.ACTIVE });
+  const totalBlckedStudents = await this.memberModel.countDocuments({ memberType: MemberType.STUDENT, memberStatus: MemberStatus.BLOCK});
+  const totalBlockedTeachers = await this.memberModel.countDocuments({ memberType: MemberType.TEACHER, memberStatus: MemberStatus.BLOCK });
   return {
     totalStudents,
     totalTeachers,
+    totalBlckedStudents,
+    totalBlockedTeachers,
     };
   }
   
-  
+  public async getRecentActiveStudents(): Promise<any> {
+    // const tenDaysAgo = new Date();
+    // tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+    // $gte: tenDaysAgo 
+    const newStudents = await this.memberModel.find({memberType: MemberType.STUDENT, memberStatus: MemberStatus.ACTIVE});
+    const newTeachers = await this.memberModel.find({memberType: MemberType.TEACHER, memberStatus: MemberStatus.ACTIVE});
+    return {newStudents,newTeachers};
+  }
+  public async getRecentActiveTeacher(): Promise<any> {
+    // const tenDaysAgo = new Date();
+    // tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+    // $gte: tenDaysAgo 
+    const newTeachers = await this.memberModel.find({memberType: MemberType.TEACHER, memberStatus: MemberStatus.ACTIVE});
+    return {newTeachers};
+  }
 }
 
 export default MemberService;

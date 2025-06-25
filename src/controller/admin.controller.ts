@@ -64,9 +64,8 @@ adminController.goHome = async (req: AdminRequest, res: Response) => {
       const result = await memberService.postLogin(input)
       req.session.member = result
       req.session.save(function(){
-        res.send(result)
+        res.redirect("/admin")
       })
-      
     }catch(err:any){
       console.error("Error, processSignup:", err);
       res.status(err.code || 500).send({ error: err.message || "Something went wrong!" });
@@ -156,6 +155,25 @@ adminController.dashboard = async (req:Request, res:Response)=>{
     res.status(500).send("Dashboard yuklanmadi");
   }
 }
- 
+adminController.getRecentActiveStudents = async(req:AdminRequest, res:Response)=>{
+  try {
+    const students = await memberService.getRecentActiveStudents(); 
+    console.log("Recent active students:", students);
+    res.render("newStudents", {students: students,
+      member: req.session.member, });
+  } catch (err) {
+    console.log("ERROR, getUsers", err);
+  }
+}
+adminController.getRecentActiveTeacher = async(req:AdminRequest, res:Response)=>{
+  try {
+    const teacher = await memberService.getRecentActiveTeacher(); 
+    console.log("Recent active students:", teacher);
+    res.render("newTeacher", {teachers: teacher,
+      member: req.session.member, });
+  } catch (err) {
+    console.log("ERROR, getUsers", err);
+  }
+}
 
 export default adminController;
