@@ -62,15 +62,51 @@ class MemberService {
     const memberId = shapeIntoMongooseObjectId(member._id);
     const result = await this.memberModel
       .findOne({ _id: memberId, memberStatus: MemberStatus.ACTIVE })
-      .lean<Member>() // lean()을 사용하여 순수 객체 반환
+      .lean<Member>()
       .exec();
   
     if (!result) {
+      throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
+    }
+  
+    return result;
+  }
+  public async updateMember(member: Member, input: MemberInput): Promise<Member> {
+    const memberId = shapeIntoMongooseObjectId(member._id);
+    const result = await this.memberModel.findOneAndUpdate({ _id: memberId }, input, { new: true }).exec();
+    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+    return result.toObject() as unknown as Member;
+  }
+  public async getTopUsers(): Promise<Member[]> {
+    const result = await this.memberModel
+      .find({ memberStatus: MemberStatus.ACTIVE, memberPoints: { $gte: 5 } })
+      .sort({ memberPoints: -1 })
+      .limit(4)
+      .lean<Member[]>()
+      .exec();
+  
+    if (!result || result.length === 0) {
       throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
     }
   
     return result;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**SSR Admin panel */

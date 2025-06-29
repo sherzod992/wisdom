@@ -1,12 +1,37 @@
-import { Schema, model, Types } from 'mongoose';
+import mongoose, { Schema } from "mongoose";
 
-const lessonSchema = new Schema({
-  title: { type: String, required: true },
-  description: { type: String },
-  videoUrl: { type: String, required: true },
-  teacher: { type: Types.ObjectId, ref: 'Member', required: true },
-}, {
-  timestamps: true,
-});
+const lessonSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+    },
+    videoUrl: {
+      type: String,
+      required: true,
+    },
+    teacherId: {
+      type: Schema.Types.ObjectId,
+      ref: "Member",
+      required: true,
+    },
+    price: {
+      type: Number,
+      default: 0,
+    },
+    status: {
+      type: String,
+      enum: ["draft", "published", "archived"],
+      default: "draft",
+    },
+  },
+  {
+    timestamps: true,
+    collection: "lessons",
+  }
+);
 
-export const LessonModel = model('Lesson', lessonSchema);
+export default mongoose.model("Lesson", lessonSchema);

@@ -1,23 +1,32 @@
-import express from "express"
-
+import express from 'express';
 const router = express.Router();
-
-import studentController from "./controller/member.controller"
 import memberController from "./controller/member.controller";
 import lessonController from "./controller/lesson.controller";
+
 /** Students Router */
-router.post("/student/login", studentController.login);
-router.post("/student/signup", studentController.signup);
+router.post("/login", memberController.login);
+router.post("/signup", memberController.signup);
 router.post("/member/logout", memberController.verifyAuth, memberController.logout);
-router.get("/member/detail",memberController.verifyAuth, memberController.getMemberdetail);
+router.get("/student/member/detail",memberController.verifyAuth, memberController.getMemberDetail);
+router.post("/member/update", memberController.verifyAuth,
+    memberController.updateMember
+   );
 
 
 
-/** Lesson Routes */
+  
+router.get("/member/top-users", memberController.getTopUsers);
+// /** Lesson Routes */
+router.get('/lesson/all', lessonController.showAllLessons);
 
-// router.get('/admin/lesson/create', lessonController.showCreateLesson);
-router.post('/admin/lesson/create', lessonController.createLesson);
-router.get('/admin/lesson/all', lessonController.showAllLessons);
+
+
+/** Teacher Create Lessons */       
+router.post('/teacher/lesson/create', lessonController.createLesson);
+router.post('/teacher/lesson/update', lessonController.updateLesson);
+
+
+
 
 
 export default router; 

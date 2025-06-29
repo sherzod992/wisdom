@@ -4,9 +4,11 @@ import { MemberType } from "../libs/enums/member.enum";
 import MemberService from "../models/Member.service";
 import Errors, { HttpCode, Message } from "../libs/utils/Errors";
 import { T } from "../libs/types/common";
-import { lessonService } from "../libs/types/member";
+import LessonService from "../models/Lesson.service";
+
 
 const lessonController:T={};
+const lessonService = new LessonService();
 
 lessonController.createLesson = async (req: AdminRequest, res: Response) => {
     try {
@@ -22,13 +24,21 @@ lessonController.createLesson = async (req: AdminRequest, res: Response) => {
 }
 lessonController.showAllLessons = async (req: AdminRequest, res: Response) => {
     try {
-        const lessons = await lessonService.getAllLessons();
+        const lessons = await lessonService.getAllLessons;
         res.render('admin/allLessons', { lessons, member: req.session.member });
       } catch (err) {
         console.error('Fetching lessons failed:', err);
         res.status(500).send('Server error');
       }
 }
-
+lessonController.updateLesson = async (req: AdminRequest, res: Response) => {
+    try{
+        const id = req.params.id;
+        const input = req.body                       // argument
+        const result = await lessonService.updateChosenLesson(id,input);
+    }catch(err) {
+        console.error('Lesson update failed:', err);
+    }
+}
 
 export default lessonController;

@@ -1,9 +1,11 @@
-import { LessonModel } from "../schema/Lesson.model";
+
 import lessonController from "../controller/lesson.controller";
 import { lessonService } from "../libs/types/member";
 import Errors from "../libs/utils/Errors";
 import { HttpCode, Message } from "../libs/utils/Errors";
 import { shapeIntoMongooseObjectId } from "../libs/utils/config";
+import { LessonUpdateInput } from "../libs/types/lesson";
+import LessonModel from "../schema/Lesson.model";
 
 
 class LessonService{
@@ -11,8 +13,6 @@ class LessonService{
     constructor() {
         this.lessonModel = LessonModel;
       }
-
-
     public async createLesson(input: {
         title: string;
         description?: string;
@@ -56,4 +56,13 @@ class LessonService{
           throw new Errors(HttpCode.INTERNAL_SERVER_ERROR, Message.UPDATE_FAILED);
         }
     }
+    public async updateChosenLesson(id:string, input:LessonUpdateInput):Promise<any>{
+      id = shapeIntoMongooseObjectId(id);
+      const result = await this.lessonModel.findOneAndUpdate( { _id: id}, input, {new: true} ).exec();
+      if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+      return result.toObject() 
+    }
 }
+
+
+export default LessonService;
