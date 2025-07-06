@@ -5,6 +5,7 @@ const orderItemSchema = new Schema(
     itemQuantity: {
       type: Number,
       required: true,
+      default: 1, // darslar uchun har doim 1 bo'ladi
     },
 
     itemPrice: {
@@ -15,11 +16,13 @@ const orderItemSchema = new Schema(
     orderId: {
       type: Schema.Types.ObjectId,
       ref: "Order",
+      required: true,
     },
 
-    productId: {
+    lessonId: { // <-- productId o‘rniga
       type: Schema.Types.ObjectId,
-      ref: "Product",
+      ref: "Lesson",
+      required: true,
     },
   },
   { timestamps: true, collection: "orderItems" }

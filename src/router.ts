@@ -2,6 +2,8 @@ import express from 'express';
 const router = express.Router();
 import memberController from "./controller/member.controller";
 import lessonController from "./controller/lesson.controller";
+import orderController from './controller/order.controller';
+// import orderController from './controller/order.controller';
 
 /** Students Router */
 router.post("/login", memberController.login);
@@ -12,7 +14,18 @@ router.post("/member/update", memberController.verifyAuth,
     memberController.updateMember
    );
 
-
+   router.post("/order/create",
+    memberController.verifyAuth,
+   orderController.createOrder
+   );
+   
+router.get("/order/all",
+    memberController.verifyAuth,
+    orderController.getMyOrders);
+   
+router.post("/order/update",
+    memberController.verifyAuth,
+    orderController.updateOrder  );
 
   
 router.get("/member/top-users", memberController.getTopUsers);

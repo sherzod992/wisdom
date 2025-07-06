@@ -5,6 +5,8 @@ import { AdminRequest, ExtendedRequest, LoginInput ,MemberInput,} from "../libs/
 import { MemberType } from "../libs/enums/member.enum";
 import Errors, { HttpCode, Message } from "../libs/utils/Errors";
 import AuthService from "../models/Auth.service";
+import { AUTH_TIMER } from "../libs/config";
+
 const memberService = new MemberService();
 const memberController:T ={}
 const authService = new AuthService(); 
@@ -13,8 +15,23 @@ memberController.signup=async (req: Request, res: Response) => {
     try {
       console.log("processSignup");
       const input: MemberInput = req.body;
+
+      if (!input.memberNick || !input.memberPhone || !input.memberPassword) {
+        return res
+          .status(HttpCode.BAD_REQUEST)
+          .json({ message: "All fields (nick, phone, password) are required!" });
+      }
+
       const result = await memberService.signup(input);
-      res.json({member:result})
+      const token = await authService.createToken(result);
+      res.cookie("accessToken", token, {
+        maxAge: AUTH_TIMER * 3600 * 1000,
+        httpOnly: false,
+      });
+  
+      res
+        .status(HttpCode.CREATED)
+        .json({ member: result, accessToken: token });
     } catch (err) {
       console.log(err);
       res.send(err)
@@ -24,8 +41,23 @@ memberController.login = async (req:Request, res: Response)=>{
     try{
       console.log("processLogin");
       const input: LoginInput = req.body;
-      const result = await memberService.postLogin(input)
-      res.json({member:result})
+
+    // === VALIDATSIYA QO‘SHILDI ===
+    if (!input.memberNick || !input.memberPassword) {
+      return res
+        .status(HttpCode.BAD_REQUEST)
+        .json({ message: "Username and password are required" });
+    }
+
+    const result = await memberService.login(input);
+    const token = await authService.createToken(result);
+
+    res.cookie("accessToken", token, {
+      maxAge: AUTH_TIMER * 3600 * 1000,
+      httpOnly: false,
+    });
+
+    res.status(HttpCode.OK).json({ member: result, accessToken: token });
     }catch(err){
         console.log(err);
         res.send(err)

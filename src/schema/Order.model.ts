@@ -1,26 +1,26 @@
-import { Schema } from "mongoose";
+// schema/Order.model.ts
+import mongoose, { Schema } from "mongoose";
 
 const orderSchema = new Schema(
   {
-    lessonId: {
-      type: Schema.Types.ObjectId,
-      ref: "Lesson",
-      required: true,
+    orderTotal: Number,
+    orderDelivery: Number,
+    orderStatus: {
+      type: String,
+      enum: ["PAUSE", "PROCESS", "PAID", "CANCELLED"], // yoki OrderStatus
+      default: "PAUSE",
     },
     memberId: {
       type: Schema.Types.ObjectId,
-      required: true,
       ref: "Member",
-    },
-    orderStatus: {
-      type: String,
-      enum: ['pending', 'completed', 'canceled'],
-      default: 'pending',
-    },
-    orderTotal: {
-      type: Number,
-      default: 0,
+      required: true,
     },
   },
-  { timestamps: true, collection: "orders" }
+  {
+    timestamps: true,
+    collection: "orders",
+  }
 );
+
+// ❗ Bu muhim
+export default mongoose.model("Order", orderSchema);

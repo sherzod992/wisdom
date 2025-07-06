@@ -1,5 +1,6 @@
 import { LessonStatus, LessonSubject } from "../enums/lesson.enum";
 import { ObjectId } from "mongoose";
+import { OrderStatus } from "../enums/order.enum";
 
 export interface Lesson {
     _id: ObjectId;
@@ -13,14 +14,11 @@ export interface Lesson {
     createdAt: Date;
     updatedAt: Date;
 }
-
-export interface LessonInquiry {
-    order: string;
+export interface OrderInquiry {
     page: number;
     limit: number;
-    lessonSubject?: LessonSubject;
-    search?: string;
-}
+    orderStatus?: OrderStatus; // 선택적 속성으로 정의
+  }
 
 export interface LessonInput {
     lessonStatus?: LessonStatus;
@@ -32,8 +30,8 @@ export interface LessonInput {
     lessonViews?: number;
 }
 
-export interface LessonUpdateInput {
-    _id: ObjectId;
+export interface OrderUpdateInput {
+    orderId: string | ObjectId; 
     lessonStatus?: LessonStatus;
     lessonSubject?: LessonSubject;
     lessonTitle?: string;
