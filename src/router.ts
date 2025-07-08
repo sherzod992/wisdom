@@ -6,8 +6,8 @@ import orderController from './controller/order.controller';
 // import orderController from './controller/order.controller';
 
 /** Students Router */
-router.post("/login", memberController.login);
-router.post("/signup", memberController.signup);
+router.post("/member/login", memberController.login);
+router.post("/member/signup", memberController.signup);
 router.post("/member/logout", memberController.verifyAuth, memberController.logout);
 router.get("/student/member/detail",memberController.verifyAuth, memberController.getMemberDetail);
 router.post("/member/update", memberController.verifyAuth,
