@@ -9,36 +9,39 @@ import LessonService from "../models/Lesson.service";
 
 const lessonController:T={};
 const lessonService = new LessonService();
-
-lessonController.createLesson = async (req: AdminRequest, res: Response) => {
+lessonController.showAllLessons = async (req: Request, res: Response) => {
     try {
-        const { title, description, videoUrl } = req.body;
-        const teacherId = req.session.member._id.toString(); // ObjectId를 string으로 변환
-  
-        await lessonService.createLesson({ title, description, videoUrl, teacherId });
-        res.redirect('/admin/lesson/all');
+      const lessons = await lessonService.getAllLessons(); // ✅ () qo‘yildi
+      res.status(200).json({ lessons }); // ✅ JSON qaytarish
     } catch (err) {
-        console.error('Lesson creation failed:', err);
-        res.status(500).send('Server error');
+      console.error('Fetching lessons failed:', err);
+      res.status(500).json({ error: 'Failed to fetch lessons' });
     }
-}
-lessonController.showAllLessons = async (req: AdminRequest, res: Response) => {
+  };
+  
+  lessonController.createLesson = async (req: AdminRequest, res: Response) => {
     try {
-        const lessons = await lessonService.getAllLessons;
-        res.render('admin/allLessons', { lessons, member: req.session.member });
-      } catch (err) {
-        console.error('Fetching lessons failed:', err);
-        res.status(500).send('Server error');
-      }
-}
-lessonController.updateLesson = async (req: AdminRequest, res: Response) => {
-    try{
-        const id = req.params.id;
-        const input = req.body                       // argument
-        const result = await lessonService.updateChosenLesson(id,input);
-    }catch(err) {
-        console.error('Lesson update failed:', err);
+      const { title, description, videoUrl } = req.body;
+      const teacherId = req.session.member._id.toString();
+  
+      await lessonService.createLesson({ title, description, videoUrl, teacherId });
+      res.status(201).json({ message: "Lesson created" }); // yoki res.redirect agar EJS bo‘lsa
+    } catch (err) {
+      console.error('Lesson creation failed:', err);
+      res.status(500).json({ error: 'Lesson creation failed' });
     }
-}
-
-export default lessonController;
+  };
+  
+  lessonController.updateLesson = async (req: AdminRequest, res: Response) => {
+    try {
+      const id = req.params.id;
+      const input = req.body;
+      const result = await lessonService.updateChosenLesson(id, input);
+      res.status(200).json({ lesson: result });
+    } catch (err) {
+      console.error('Lesson update failed:', err);
+      res.status(500).json({ error: 'Lesson update failed' });
+    }
+  };
+  
+  export default lessonController;
