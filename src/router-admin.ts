@@ -31,13 +31,26 @@ routerAdmin.get(
 routerAdmin.get(
   "/dashboard",adminController.dashboard
 );
+
+routerAdmin.post("/user/edit",adminController.updateChosenUser);
+routerAdmin.get('/student/recent', adminController.getRecentActiveStudents);
+routerAdmin.get('/teacher/recent', adminController.getRecentActiveTeacher);
+
+/**Lessons  */
+
+routerAdmin.get(
+  "/lesson/all",
+  adminController.verifyAdmin,
+  lessonController.getAllLessons);
 routerAdmin.post(
   "/lesson/create",
   adminController.verifyAdmin,
   makeUploader("products").array("productImages", 5),
   lessonController.createLesson
 );
-routerAdmin.post("/user/edit",adminController.updateChosenUser);
-routerAdmin.get('/student/recent', adminController.getRecentActiveStudents);
-routerAdmin.get('/teacher/recent', adminController.getRecentActiveTeacher);
+routerAdmin.post(
+  "/lesson/:id",
+  adminController.verifyAdmin,
+  lessonController.updateChusenLesson
+)
 export default routerAdmin;
