@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { AdminRequest, LoginInput, MemberInput } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
 import MemberService from "../models/Member.service";
-import Errors, { HttpCode, Message } from "../libs/utils/Errors";
+import Errors,{HttpCode,Message} from "../libs/Errors";
 import { T } from "../libs/types/common";
+
 
 
 const adminController:T={};

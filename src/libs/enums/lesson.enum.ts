@@ -5,7 +5,7 @@
     ACTIVE = "ACTIVE",
     DELETE = "DELETE",
   }
-  export enum LessonSubject{
+  export enum LessonCollection{
     MATH = "MATH",
     SCIENCE = "SCIENCE",
     ENGLISH = "ENGLISH",

@@ -3,13 +3,12 @@ import express from 'express';
 import path from 'path'; 
 import routerAdmin from './router-admin';
 import morgan from 'morgan';
-import { MORGAN_FORMAT } from './libs/utils/config';
-import studentRouter from './router';
+import { MORGAN_FORMAT } from './libs/config';
 import session from 'express-session';
 /** 1 ENTRAMCE */
 import ConnectMongoDB from 'connect-mongodb-session';
 import { T } from './libs/types/common';
-import router from './router';
+// import router from './router';
 const MongoDBStore = ConnectMongoDB(session);
 const store = new MongoDBStore({
     uri: String(process.env.MONGO_URI), 
@@ -42,7 +41,7 @@ app.set('view engine', 'ejs');
 
 /** 4 ROUTES */
 app.use("/admin", routerAdmin);
-app.use("/",router)
+// app.use("/",router)
 
 export default app;  
 

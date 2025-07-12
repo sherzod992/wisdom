@@ -1,39 +1,42 @@
-import { LessonStatus, LessonSubject } from "../enums/lesson.enum";
+import { LessonCollection, LessonStatus } from "../enums/lesson.enum";
 import { ObjectId } from "mongoose";
 import { OrderStatus } from "../enums/order.enum";
 
 export interface Lesson {
     _id: ObjectId;
     lessonStatus: LessonStatus;
-    lessonSubject: LessonSubject;
     lessonTitle: string;
     lessonPrice: number;
     lessonDesc?: string;
-    lessonVideoLinks: string[]; // YouTube yoki Vimeo linklar
+    lessonVideo: string[];
+    lessonImage:string[];
     lessonViews: number;
     createdAt: Date;
     updatedAt: Date;
 }
-export interface OrderInquiry {
+export interface LessonInquiry {
+    order: string;
     page: number;
     limit: number;
-    orderStatus?: OrderStatus; // 선택적 속성으로 정의
+    lessonCollection?:LessonCollection
+    search?: string;
   }
-
-export interface LessonInput {
-    lessonStatus?: LessonStatus;
-    lessonSubject: LessonSubject;
+  export interface LessonInput {
     lessonTitle: string;
-    lessonDesc?: string;
+    lessonDesc: string;
+    lessonVideo?: string[]; // 선택적 속성
     lessonPrice: number;
-    lessonVideoLinks?: string[];
+    lessonCollection?: string; // 선택적 속성
+    lessonStatus?: string; // 선택적 속성
+    lessonImages?: string[]; // 선택적 속성
     lessonViews?: number;
 }
 
-export interface OrderUpdateInput {
+
+export interface LessonUpdateInput {
     orderId: string | ObjectId; 
     lessonStatus?: LessonStatus;
-    lessonSubject?: LessonSubject;
+    lessonCollection?:LessonCollection
     lessonTitle?: string;
     lessonPrice?: number;
     lessonDesc?: string;

@@ -1,31 +1,35 @@
 import mongoose, { Schema } from "mongoose";
+import { LessonStatus } from "../libs/enums/lesson.enum";
 
 const lessonSchema = new Schema(
   {
-    title: {
+    lessonTitle: {
       type: String,
       required: true,
     },
-    description: {
+    lessonDesc: {
       type: String,
     },
-    videoUrl: {
+    lessonVideo: {
       type: String,
       required: true,
     },
-    teacherId: {
-      type: Schema.Types.ObjectId,
-      ref: "Member",
-      required: true,
-    },
-    price: {
+    lessonPrice: {
       type: Number,
       default: 0,
     },
-    status: {
+    lessonStatus: {
       type: String,
-      enum: ["draft", "published", "archived"],
-      default: "draft",
+      enum: LessonStatus,
+      default:LessonStatus.PAUSE
+    },
+    lesssonName:{
+      type: String,
+      required: true,
+    },
+    lessonImages: {
+      type: [String],
+      default: [],
     },
   },
   {

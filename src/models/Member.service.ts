@@ -1,10 +1,9 @@
 import MemberModel from "../schema/Member.model";
 import { MemberInput, Member, LoginInput, MemberUpdateInput } from "../libs/types/member";
 import { MemberStatus, MemberType } from "../libs/enums/member.enum";
-import Errors from "../libs/utils/Errors";
-import { HttpCode, Message } from "../libs/utils/Errors";
+import Errors,{ HttpCode,Message } from "../libs/Errors";
 import * as bcrypt from "bcryptjs";
-import { shapeIntoMongooseObjectId } from "../libs/utils/config";
+import { shapeIntoMongooseObjectId } from "../libs/config";
 
 class MemberService {
   private readonly memberModel;

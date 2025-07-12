@@ -2,7 +2,8 @@ import { ObjectId } from "mongoose";
 import { MemberStatus, MemberType } from "../enums/member.enum";
 import { Session } from "express-session";
 import { Request } from "express";
-import { LessonModel } from "../../schema/Lesson.model";
+import LessonModel from "../../schema/Lesson.model";
+
 
 export interface Member{
     _id: ObjectId;
@@ -60,8 +61,8 @@ export interface ExtendedRequest extends Request {
 export interface AdminRequest extends Request {
     member:Member;
     session: Session & {member: Member}
-    // file: Express.Multer.File;
-    // files: Express.Multer.File[];
+    file: Express.Multer.File;
+    files: Express.Multer.File[];
 }
 
 

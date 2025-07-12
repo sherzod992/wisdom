@@ -1,6 +1,10 @@
 import express from 'express';
 import adminController from './controller/admin.controller';
 
+import makeUploader from './libs/utils/uploader';
+import lessonController from './controller/lesson.controller';
+
+
 const routerAdmin = express.Router();
 
 routerAdmin.get("/", adminController.goHome);
@@ -27,11 +31,12 @@ routerAdmin.get(
 routerAdmin.get(
   "/dashboard",adminController.dashboard
 );
-// routerAdmin.post(
-//   "/product/:id",// method get() 📍 Endpoint (URL) => Admin  sahifasiga kirganda
-//   adminController.verifyAdmin,// 🔐 Middleware =>(Authorization) Avval `Restaurant` admin ekanligini tekshiradi 
-//   productController.updateChosenProduct//Handler => Ruxsat bo‘lsa, barcha userlarni bazadan olib beradi
-// );
+routerAdmin.post(
+  "/lesson/create",
+  adminController.verifyAdmin,
+  makeUploader("products").array("productImages", 5),
+  lessonController.createLesson
+);
 routerAdmin.post("/user/edit",adminController.updateChosenUser);
 routerAdmin.get('/student/recent', adminController.getRecentActiveStudents);
 routerAdmin.get('/teacher/recent', adminController.getRecentActiveTeacher);

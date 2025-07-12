@@ -1,17 +1,22 @@
 {
-    "compilerOptions": {
-      "target": "ES2020",   //  loyiha yozilgani esma jsda
-      "module": "commonjs",  // common js ga ugirishini aytmoqdamiz
-      "outDir": "./dist",  // natijasini shu folderga yozib berishini aytamiz
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
+  "compilerOptions": {
+      "target": "ES2020", 
+      "module": "CommonJS", 
+      "strict": true, 
+      "esModuleInterop": true, 
       "forceConsistentCasingInFileNames": true,
-      "baseUrl": "./",
+      "skipLibCheck": true, 
+      "outDir": "./dist", 
+      "baseUrl": "./", 
+      "rootDir": "./src",
+      "resolveJsonModule": true,
+      "sourceMap": true, 
+      "moduleResolution": "node", 
       "paths": {
-        "*": ["node_modules/*"] // node module ning path ni korsatmoqdamiz
+          "*": ["node_modules/*"]
       }
-    },
-   "include": ["src/**/*.ts"],
-    "exclude": ["node_modules"]
-  }
+  },
+  "include": ["src/**/*.ts"], // Faqat `src` papkasidagi barcha `.ts` fayllarni kompilyatsiya qiladi
+  "exclude": ["node_modules"] // `node_modules` papkasini kompilyatsiya qilmaydi
+}
+

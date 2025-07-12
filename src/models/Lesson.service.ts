@@ -1,68 +1,36 @@
-
-import lessonController from "../controller/lesson.controller";
-import { lessonService } from "../libs/types/member";
-import Errors from "../libs/utils/Errors";
-import { HttpCode, Message } from "../libs/utils/Errors";
-import { shapeIntoMongooseObjectId } from "../libs/utils/config";
-import { OrderUpdateInput } from "../libs/types/lesson";
 import LessonModel from "../schema/Lesson.model";
-
+import Errors, { HttpCode, Message } from "../libs/Errors";
+import {Lesson, LessonInput, LessonInquiry, LessonUpdateInput} from  "../libs/types/lesson";
+import { shapeIntoMongooseObjectId } from "../libs/config";
+import { T } from "../libs/types/common";
+import { LessonStatus } from "../libs/enums/lesson.enum";
+import { ObjectId } from "mongoose";
 
 class LessonService{
     private readonly lessonModel;
-    constructor() {
-        this.lessonModel = LessonModel;
-      }
-    public async createLesson(input: {
-        title: string;
-        description?: string;
-        videoUrl: string;
-        teacherId: string;
-      }): Promise<any> {
-        // 🛡️ 1. Tekshiruv
-        if (!input.title || !input.videoUrl || !input.teacherId) {
-          throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
-        }
-    
-        try {
-          // ✅ 2. Saqlash
-          const result = await this.lessonModel.create({
-            title: input.title,
-            description: input.description,
-            videoUrl: input.videoUrl,
-            teacher: input.teacherId,
-          });
-    
-          return result.toJSON();
-        } catch (err) {
-          console.error('Lesson create error:', err);
-          throw new Errors(HttpCode.INTERNAL_SERVER_ERROR, Message.CREATE_FAILED);
-        }
-      }
-      public async getAllLessons(): Promise<any[]> {
-        try {
-          const lessons = await this.lessonModel
-            .find()
-            .populate('teacher')
-            .sort({ createdAt: -1 });
-    
-          if (!lessons || lessons.length === 0) {
-            throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-          }
-    
-          return lessons.map(lesson => lesson.toJSON());
-        } catch (err) {
-          console.error('Get lessons error:', err);
-          throw new Errors(HttpCode.INTERNAL_SERVER_ERROR, Message.UPDATE_FAILED);
+    constructor(){
+        this.lessonModel = LessonModel
+    }
+    public async getAllLessons(): Promise<Lesson[]>{
+        const result = await this.lessonModel.find().exec();
+        if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+        return result as unknown as Lesson[];
+    }
+    public async createLesson(input:LessonInput):Promise<Lesson>{
+        try{
+            console.log("createNewLesson");
+            return await this.lessonModel.create(input) as unknown as Lesson
+        }catch(err){
+            console.error("Error, model:createNewProduct", err);
+            throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED)
         }
     }
-    public async updateChosenLesson(id:string, input:OrderUpdateInput):Promise<any>{
-      id = shapeIntoMongooseObjectId(id);
-      const result = await this.lessonModel.findOneAndUpdate( { _id: id}, input, {new: true} ).exec();
-      if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
-      return result.toObject() 
+    public async updateChusenLesson(id:string,input:LessonUpdateInput):Promise<Lesson>{
+        id = shapeIntoMongooseObjectId(id);
+        const result = await this.lessonModel.findOneAndUpdate({ _id: id}, input, {new: true}).exec();
+        if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+    return result.toObject() as Lesson
     }
 }
 
-
-export default LessonService;
+export default LessonService
