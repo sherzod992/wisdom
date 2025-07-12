@@ -6,7 +6,7 @@
     <div class="nav-links">
       <% if (member) { %>
         <a href="/admin/lessons">Lessons</a>
-        <a href="/admin/newlessons">Create New-Lesson</a>
+        <a href="/admin/lesson/all" class="btn btn-primary">View All Lessons</a>
         <% } %>
     </div>
 
@@ -33,16 +33,16 @@
 
       <% if (member) { %>
         <div class="cta-group">
-          <a href="/admin/teacher/all" class="cta-button">Teacher All</a>
-          <a href="/admin/student/all" class="cta-button-secondary">Student All</a>
+          <!-- <a href="/admin/teacher/all" class="cta-button">Teacher All</a> -->
+          <a href="/admin/student/all" class="cta-button">Student All</a>
     
         </div>
 
         <div class="stats-container">
-          <div class="stat-item">
+          <!-- <div class="stat-item">
             <span class="stat-number"><%= totalTeachers %></span>
             <span class="stat-label">Teachers All</span>
-          </div>
+          </div> -->
           <div class="stat-item">
             <span class="stat-number">
               <%= totalStudents %>
@@ -57,10 +57,10 @@
             <span class="stat-number"><%= totalBlckedStudents %></span>
             <span class="stat-label">BlckedStudents</span> 
           </div>
-          <div class="stat-item">
+          <!-- <div class="stat-item">
             <span class="stat-number"><%= totalBlockedTeachers %></span>
             <span class="stat-label">BlockedTeachers</span> 
-          </div>
+          </div> -->
         </div>
         <% } else { %>
           <p class="hero-content">먼저 로그인하거나 회원가입하셔야 합니다</p>

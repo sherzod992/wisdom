@@ -1,0 +1,111 @@
+<%- include('includes/header') %>
+<link rel="stylesheet" href="/css/lesson.css" />
+
+<body>
+  <!-- Navbar -->
+  <nav>
+    <a href="/admin/" class="logo">Wisdom Admin</a>
+    <div class="auth-buttons">
+      <a class="login" href="/admin/logout" onclick="return confirm('Do you want to logout?')">Logout</a>
+    </div>
+  </nav>
+
+  <main style="padding-top: 100px; padding-inline: 6rem;">
+    <section class="restaurant-menu-frame">
+      <div class="board">
+        <!-- Lessons Table -->
+        <div class="dishes-table">
+          <h2 class="new-dish-txt" style="margin-bottom: 30px">ALL LESSONS</h2>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th>T/r</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Image</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% lessons.forEach(function(lesson, index) { %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= lesson.lessonTitle %></td>
+                  <td>$<%= lesson.lessonPrice %></td>
+                  <td>
+                    <select class="new-product-status" id="<%= lesson._id %>">
+                      <option value="ACTIVE" <%= lesson.lessonStatus === "ACTIVE" ? "selected" : "" %>>ACTIVE</option>
+                      <option value="INACTIVE" <%= lesson.lessonStatus === "INACTIVE" ? "selected" : "" %>>INACTIVE</option>
+                      <option value="DELETED" <%= lesson.lessonStatus === "DELETED" ? "selected" : "" %>>DELETED</option>
+                    </select>
+                  </td>
+                  <td>
+                    <% if (lesson.lessonImages && lesson.lessonImages.length > 0) { %>
+                      <img src="/<%= lesson.lessonImages[0] %>" style="width: 100px; border-radius: 10px;" />
+                    <% } else { %>
+                      <span style="color: var(--text-secondary);">No image</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+
+          <div class="operation-buttons" style="justify-content: flex-end;">
+            <button class="btn btn-primary" id="process-btn">New Lesson</button>
+          </div>
+        </div>
+
+        <!-- Lesson Create Form -->
+        <form action="/admin/lesson/create" method="POST" class="dish-container" enctype="multipart/form-data">
+          <h3 class="new-dish-txt" style="margin-bottom: 1rem">NEW LESSON DETAIL</h3>
+
+          <div class="long-input">
+            <label>Lesson Title</label>
+            <input type="text" name="lessonTitle" placeholder="Title" required />
+            <input name="lessonStatus" value="INACTIVE" hidden />
+          </div>
+
+          <div class="half-input-frame">
+            <div class="half-input">
+              <label>Lesson Price</label>
+              <input type="number" name="lessonPrice" placeholder="Price" required />
+            </div>
+          </div>
+
+          <div class="long-input">
+            <label>Lesson Description</label>
+            <textarea name="lessonDesc" placeholder="Write something..."></textarea>
+          </div>
+
+          <div class="long-input">
+            <label>Lesson Video Links (comma separated)</label>
+            <input type="text" name="lessonVideo" placeholder="https://..." />
+          </div>
+
+          <div class="img-frame">
+            <label>Lesson Images</label>
+            <div class="media-frame">
+              <% for (let i = 1; i <= 5; i++) { %>
+                <div class="upload-img-box">
+                  <img src="/img/upload.svg" id="image-section-<%= i %>" />
+                  <input type="file" name="productImages" />
+                </div>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="operation-buttons">
+            <button type="button" class="btn btn-danger" id="cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="create-btn">Create</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/products.js"></script>
+</body>
+
+<%- include('includes/footer') %>
