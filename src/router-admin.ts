@@ -45,7 +45,7 @@ routerAdmin.get(
 routerAdmin.post(
   "/lesson/create",
   adminController.verifyAdmin,
-  makeUploader("products").array("lessonImages", 5),
+  makeUploader("lessons").array("lessonImages", 5),
   lessonController.createLesson
 );
 routerAdmin.post(

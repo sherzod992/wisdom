@@ -3,14 +3,86 @@ import Errors, { HttpCode, Message } from "../libs/Errors";
 import {Lesson, LessonInput, LessonInquiry, LessonUpdateInput} from  "../libs/types/lesson";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import { T } from "../libs/types/common";
-import { LessonStatus } from "../libs/enums/lesson.enum";
+import { LessonStatus, ViewGroup } from "../libs/enums/lesson.enum";
 import { ObjectId } from "mongoose";
+import { ViewInput } from "../libs/types/view";
+import ViewService from "./View.service";
 
 class LessonService{
     private readonly lessonModel;
+    viewService: ViewService;
     constructor(){
         this.lessonModel = LessonModel
+        this.viewService = new ViewService();
     }
+    public async getLessons(inquiry:LessonInquiry):Promise<Lesson[]>{
+        const match:T ={lessonStatus:LessonStatus.ACTIVE};
+        if(inquiry.lessonCollection)
+            match.productCollection = inquiry.lessonCollection;
+        // productCollection bo‘lsa, matchga qo‘shish."
+        if(inquiry.search) {
+            match.productName = {$regex: new RegExp(inquiry.search, "i")}; // i bu flag katta kichik harflar insensitive
+        }
+        //search bo‘lsa, productNameni regulyar ifoda bilan qidirish (katta kichik harflar farqini e'tiborsiz qoldirish)."
+        const sort: T = inquiry.order === "productPrice" // yuqoridan pastga
+         ? {[inquiry.order] : 1} // yuqoridan pastga True
+         : {[inquiry.order] : -1};// pastdan yuqoriga  False
+    
+         const result = await this.lessonModel.aggregate([
+            {$match: match},
+            {$sort: sort},
+            {$skip: (inquiry.page * 1 - 1) * inquiry.limit},
+            {$limit: inquiry.limit * 1},
+         ])
+         .exec();
+
+     if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+     return result;
+    
+    }
+    public async getLesson(memberId: ObjectId | null, id: string):Promise<Lesson>{
+        const productId = shapeIntoMongooseObjectId(id);
+        
+        let result  = await this.lessonModel.findOne({
+            _id : productId,
+            productStatus: LessonStatus.ACTIVE  
+        })
+        .exec();
+      
+        if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+      
+        if(memberId) {
+            //Check existence
+            const input: ViewInput = {
+                memberId: memberId,
+                viewRefId: productId,
+                viewGroup : ViewGroup.PRODUCT
+            };
+            const existView = await this.viewService.checkViewExistence(input);
+            
+            console.log("exist:", !!existView)
+            if(!existView) {
+                // Insert View
+                console.log("planning to insert new view")
+                await this.viewService.insertMemberView(input);
+      
+                // Increase Counts
+                result = await this.lessonModel.findByIdAndUpdate(
+                    productId,
+                    { $inc: { productViews: +1 }},
+                    { new: true }
+                )
+            }
+      
+      
+        }
+      
+        return result as unknown as Lesson;
+      }
+      
+
+    
     public async getAllLessons(): Promise<Lesson[]>{
         const result = await this.lessonModel.find().exec();
         if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
@@ -30,6 +102,17 @@ class LessonService{
         const result = await this.lessonModel.findOneAndUpdate({ _id: id}, input, {new: true}).exec();
         if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
     return result.toObject() as Lesson
+    }
+
+    public async getLessonData():Promise<any>{
+        const activeLessons = await this.lessonModel.countDocuments({lessonStatus: LessonStatus.ACTIVE})
+        const pauseLessons= await this.lessonModel.countDocuments({lessonStatus:LessonStatus.PAUSE})
+        const deleteLessons= await this.lessonModel.countDocuments({lessonStatus:LessonStatus.DELETE})
+        return {
+            activeLessons,
+            pauseLessons,
+            deleteLessons,
+        }
     }
 }
 

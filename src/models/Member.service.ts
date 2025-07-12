@@ -4,16 +4,28 @@ import { MemberStatus, MemberType } from "../libs/enums/member.enum";
 import Errors,{ HttpCode,Message } from "../libs/Errors";
 import * as bcrypt from "bcryptjs";
 import { shapeIntoMongooseObjectId } from "../libs/config";
+import LessonModel from "../schema/Lesson.model";
 
 class MemberService {
   private readonly memberModel;
-
+  private readonly lessonModel;
 
   constructor() {
     this.memberModel = MemberModel;
+    this.lessonModel = LessonModel;
   }
 
   /** SPA Students Page **/
+
+
+  public async getTeacher(): Promise<Member>{
+    const result = await this.memberModel
+    .findOne({ memberType: MemberType.ADMIN})
+    .lean()
+    .exec();
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    return result as unknown as Member;
+  }
   public async signup(input: MemberInput): Promise<Member> {
     if (!input.memberNick || !input.memberPhone || !input.memberPassword) {
       throw new Errors(HttpCode.BAD_REQUEST,Message.SOMETHING_WENT_WRONG);

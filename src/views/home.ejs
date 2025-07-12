@@ -2,10 +2,9 @@
   <link rel="stylesheet" href="/css/home.css">
 
   <nav>
-    <a href="/admin/" class="logo">Wisdom Admin</a>
+    <a href="/admin/" class="logo">Wisdom Teacher</a>
     <div class="nav-links">
       <% if (member) { %>
-        <a href="/admin/lessons">Lessons</a>
         <a href="/admin/lesson/all" class="btn btn-primary">View All Lessons</a>
         <% } %>
     </div>
@@ -24,7 +23,7 @@
     <div class="hero-content">
       <h1>
         <% if (member) { %>
-          다시 오신 것을 환영합니다 <%= member.memberNick || "Admin" %> 님
+          다시 오신 것을 환영합니다 <%= member.memberNick || "Teacher" %> 님
             <% } else { %>
               Welcome, Admin
               <% } %>
@@ -35,7 +34,8 @@
         <div class="cta-group">
           <!-- <a href="/admin/teacher/all" class="cta-button">Teacher All</a> -->
           <a href="/admin/student/all" class="cta-button">Student All</a>
-    
+          <a href="/admin/lesson/all" class="cta-button">View All Lessons</a>
+          
         </div>
 
         <div class="stats-container">
@@ -47,15 +47,23 @@
             <span class="stat-number">
               <%= totalStudents %>
             </span>
-            <span class="stat-label">O'quvchilar</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">5</span>
-            <span class="stat-label">Faol Kurslar</span> 
+            <span class="stat-label">Students</span>
           </div>
           <div class="stat-item">
             <span class="stat-number"><%= totalBlckedStudents %></span>
             <span class="stat-label">BlckedStudents</span> 
+          </div>
+          <div class="stat-item">
+            <span class="stat-number"><%= activeLessons %></span>
+            <span class="stat-label">ActiveLessons</span> 
+          </div>
+          <div class="stat-item">
+            <span class="stat-number"><%= pauseLessons %></span>
+            <span class="stat-label">PauseLessons</span> 
+          </div>
+          <div class="stat-item">
+            <span class="stat-number"><%= deleteLessons %></span>
+            <span class="stat-label">DeleteLessons</span> 
           </div>
           <!-- <div class="stat-item">
             <span class="stat-number"><%= totalBlockedTeachers %></span>

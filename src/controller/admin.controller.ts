@@ -4,17 +4,20 @@ import { MemberType } from "../libs/enums/member.enum";
 import MemberService from "../models/Member.service";
 import Errors,{HttpCode,Message} from "../libs/Errors";
 import { T } from "../libs/types/common";
+import LessonService from "../models/Lesson.service";
 
 
 
 const adminController:T={};
 const memberService = new MemberService();
+const lessonService = new LessonService();
 adminController.goHome = async (req: AdminRequest, res: Response) => {
   try {
     console.log("home");
     const member = req.session.member || null;
     const stats = await memberService.getDashboardStats();
-    res.render("home",{ member, ...stats });   
+    const lessonstats = await lessonService.getLessonData();
+    res.render("home",{ member, ...stats, ...lessonstats });   
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");

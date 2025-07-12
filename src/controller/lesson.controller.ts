@@ -1,13 +1,53 @@
 import { Request, Response } from "express";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { T } from "../libs/types/common";
-import { LessonInput } from "../libs/types/lesson";
-import { AdminRequest } from "../libs/types/member";
+import { LessonInput, LessonInquiry } from "../libs/types/lesson";
+import { AdminRequest, ExtendedRequest } from "../libs/types/member";
 import LessonService from "../models/Lesson.service";
+import { LessonCollection } from "../libs/enums/lesson.enum";
 
 const lessonService = new LessonService();
 const lessonController: T = {};
+lessonController.getLessons = async (req: Request, res:Response) => {
+  try{
+      console.log("getProducts");       
+      const {page, limit, order, productCollection, search} = req.query;//So‘rov (query) parametrlarini ajratib olish
+      const inquiry: LessonInquiry = {
+          order: String(order),
+          page: Number(page),
+          limit: Number(limit),
+      };
+      //ProductInquiry tipidagi obyektni yaratish va so‘rovdan olingan parametrlarni shu obyektga joylashtirish.
+      if(productCollection) inquiry.lessonCollection = productCollection as LessonCollection;
+      // Agar productCollection bo‘lsa, uni ProductCollection turiga kiritib, inquiryga qo‘shish.
 
+      if(search) inquiry.search = String(search);
+      // Agar search bo‘lsa, uni stringga aylantirib, inquiryga qo‘shish.
+
+      const result = await lessonService.getLessons(inquiry)
+      res.status(HttpCode.OK).json(result)
+  } catch(err){
+      console.log("ERROR, getProducts", err);
+      if( err instanceof Errors) res.status(err.code).json(err);
+      else res.status(Errors.standard.code).json(Errors.standard )
+      // res.json({})
+  }
+}
+lessonController.getLesson= async (req: ExtendedRequest, res:Response) => {
+  try{
+      console.log("getProduct");       
+      const {id} = req.params;
+      console.log(req.member)
+      const memberId = req.member?._id ?? null;
+      const result = await lessonService.getLesson(memberId, id)
+
+      res.status(HttpCode.OK).json(result)
+  } catch(err){
+      console.log("ERROR, getProduct", err);
+      if( err instanceof Errors) res.status(err.code).json(err);
+      else res.status(Errors.standard.code).json(Errors.standard )
+  }
+}
 // SSR - Barcha darslarni admin panelda ko‘rish
 lessonController.getAllLessons = async (req: Request, res: Response) => {
   try {
