@@ -36,8 +36,8 @@ app.use(session({
 
 
 /** 3 VIEVS */
-app.set('views', path.join(__dirname, 'views')); 
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 /** 4 ROUTES */
 app.use("/admin", routerAdmin);

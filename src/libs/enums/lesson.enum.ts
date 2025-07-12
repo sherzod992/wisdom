@@ -4,6 +4,7 @@
     PAUSE = "PAUSE",
     ACTIVE = "ACTIVE",
     DELETE = "DELETE",
+    INACTIVE ="INACTIVE"
   }
   export enum LessonCollection{
     MATH = "MATH",

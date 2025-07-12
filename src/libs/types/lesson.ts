@@ -22,10 +22,11 @@ export interface LessonInquiry {
     search?: string;
   }
   export interface LessonInput {
-    lessonTitle: string;
-    lessonDesc: string;
+    _id: ObjectId;
+    lessonTitle?: string;
+    lessonDesc?: string;
     lessonVideo?: string[]; // 선택적 속성
-    lessonPrice: number;
+    lessonPrice?: number;
     lessonCollection?: string; // 선택적 속성
     lessonStatus?: string; // 선택적 속성
     lessonImages?: string[]; // 선택적 속성

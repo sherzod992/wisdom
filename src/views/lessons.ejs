@@ -2,7 +2,6 @@
 <link rel="stylesheet" href="/css/lesson.css" />
 
 <body>
-  <!-- Navbar -->
   <nav>
     <a href="/admin/" class="logo">Wisdom Admin</a>
     <div class="auth-buttons">
@@ -13,10 +12,10 @@
   <main style="padding-top: 100px; padding-inline: 6rem;">
     <section class="restaurant-menu-frame">
       <div class="board">
+
         <!-- Lessons Table -->
         <div class="dishes-table">
-          <h2 class="new-dish-txt" style="margin-bottom: 30px">ALL LESSONS</h2>
-
+          <h2 class="new-dish-txt">ALL LESSONS</h2>
           <table class="table">
             <thead>
               <tr>
@@ -35,36 +34,35 @@
                   <td>$<%= lesson.lessonPrice %></td>
                   <td>
                     <select class="new-product-status" id="<%= lesson._id %>">
+                      <option value="PAUSE" <%= lesson.lessonStatus === "PAUSE" ? "selected" : "" %>>PAUSE</option>
                       <option value="ACTIVE" <%= lesson.lessonStatus === "ACTIVE" ? "selected" : "" %>>ACTIVE</option>
-                      <option value="INACTIVE" <%= lesson.lessonStatus === "INACTIVE" ? "selected" : "" %>>INACTIVE</option>
-                      <option value="DELETED" <%= lesson.lessonStatus === "DELETED" ? "selected" : "" %>>DELETED</option>
+                      <option value="DELETE" <%= lesson.lessonStatus === "DELETE" ? "selected" : "" %>>DELETE</option>
                     </select>
                   </td>
                   <td>
                     <% if (lesson.lessonImages && lesson.lessonImages.length > 0) { %>
                       <img src="/<%= lesson.lessonImages[0] %>" style="width: 100px; border-radius: 10px;" />
                     <% } else { %>
-                      <span style="color: var(--text-secondary);">No image</span>
+                      <span>No image</span>
                     <% } %>
                   </td>
                 </tr>
               <% }) %>
             </tbody>
           </table>
-
-          <div class="operation-buttons" style="justify-content: flex-end;">
+          <div class="operation-buttons">
             <button class="btn btn-primary" id="process-btn">New Lesson</button>
           </div>
         </div>
 
-        <!-- Lesson Create Form -->
-        <form action="/admin/lesson/create" method="POST" class="dish-container" enctype="multipart/form-data">
-          <h3 class="new-dish-txt" style="margin-bottom: 1rem">NEW LESSON DETAIL</h3>
+        <!-- Create New Lesson Form -->
+        <form action="/admin/lesson/create" method="POST" enctype="multipart/form-data" class="dish-container">
+          <h3 class="new-dish-txt">NEW LESSON DETAIL</h3>
 
           <div class="long-input">
             <label>Lesson Title</label>
             <input type="text" name="lessonTitle" placeholder="Title" required />
-            <input name="lessonStatus" value="INACTIVE" hidden />
+            <input type="hidden" name="lessonStatus" value="PAUSE" />
           </div>
 
           <div class="half-input-frame">
@@ -80,19 +78,37 @@
           </div>
 
           <div class="long-input">
-            <label>Lesson Video Links (comma separated)</label>
-            <input type="text" name="lessonVideo" placeholder="https://..." />
+            <label>Lesson Video Links</label>
+            <div id="video-links-container">
+              <input type="text" name="lessonVideo[]" placeholder="https://..." />
+            </div>
+            <button type="button" class="btn btn-secondary" id="add-video-link" style="margin-top: 10px;">+ Add another link</button>
           </div>
 
           <div class="img-frame">
             <label>Lesson Images</label>
             <div class="media-frame">
-              <% for (let i = 1; i <= 5; i++) { %>
-                <div class="upload-img-box">
-                  <img src="/img/upload.svg" id="image-section-<%= i %>" />
-                  <input type="file" name="productImages" />
-                </div>
-              <% } %>
+              <div class="upload-img-box">
+                <img src="/img/upload.svg" class="1" id="image-section-1" />
+                <input type="file" id="file" name="lessonImages" class="image-one" required
+                  onchange="previewFileHandler(this, 1)" />
+              </div>
+              <div class="upload-img-box">
+                <img src="/img/upload.svg" class="2" id="image-section-2" />
+                <input type="file" id="file" name="lessonImages" class="image-two"
+                  onchange="previewFileHandler(this, 2)" />
+              </div>
+              <div class="upload-img-box">
+                <img src="/img/upload.svg" class="3" id="image-section-3" />
+                <input type="file" id="file" name="lessonImages" class="image-three"
+                  onchange="previewFileHandler(this, 3)" />
+              </div>
+              <div class="upload-img-box">
+                <img src="/img/upload.svg" class="4" id="image-section-4" />
+                <input type="file" id="file" name="lessonImages" class="image-four"
+                  onchange="previewFileHandler(this, 4)" />
+              </div>
+              <div class="upload-img-box">
             </div>
           </div>
 
@@ -105,7 +121,9 @@
     </section>
   </main>
 
-  <script src="/js/products.js"></script>
+ 
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="/js/lesson.js"></script>
 </body>
-
 <%- include('includes/footer') %>

@@ -21,7 +21,7 @@ class LessonService{
             console.log("createNewLesson");
             return await this.lessonModel.create(input) as unknown as Lesson
         }catch(err){
-            console.error("Error, model:createNewProduct", err);
+            console.error("Error, model:createLesson", err);
             throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED)
         }
     }

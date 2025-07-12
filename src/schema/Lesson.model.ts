@@ -3,17 +3,11 @@ import { LessonStatus } from "../libs/enums/lesson.enum";
 
 const lessonSchema = new Schema(
   {
-    lessonTitle: {
-      type: String,
-      required: true,
-    },
+    lessonTitle: { type: String, required: true },
     lessonDesc: {
       type: String,
     },
-    lessonVideo: {
-      type: String,
-      required: true,
-    },
+    lessonVideo: { type: [String], default: [] },
     lessonPrice: {
       type: Number,
       default: 0,
@@ -23,9 +17,9 @@ const lessonSchema = new Schema(
       enum: LessonStatus,
       default:LessonStatus.PAUSE
     },
-    lesssonName:{
+    lessonName: {
       type: String,
-      required: true,
+      required: false,
     },
     lessonImages: {
       type: [String],
