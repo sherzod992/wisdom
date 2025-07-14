@@ -5,7 +5,7 @@ const orderItemSchema = new Schema(
     itemQuantity: {
       type: Number,
       required: true,
-      default: 1, // darslar uchun har doim 1 bo'ladi
+      default: 1,
     },
 
     itemPrice: {
@@ -19,7 +19,7 @@ const orderItemSchema = new Schema(
       required: true,
     },
 
-    lessonId: { // <-- productId o‘rniga
+    lessonId: { 
       type: Schema.Types.ObjectId,
       ref: "Lesson",
       required: true,

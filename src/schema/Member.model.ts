@@ -30,6 +30,7 @@ const memberSchema = new Schema({
     memberPassword : {
         type:String,
         select:false,
+        minlength: 4, 
         required: true
     },
 

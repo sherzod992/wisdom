@@ -52,7 +52,7 @@ $(function () {
   
   // ✅ Validate form input before submit
   function validateForm() {
-    const title = $("input[name='lessonTitle']").val();
+    const title = $("input[name='lessonName']").val();
     const price = $("input[name='lessonPrice']").val();
     const desc = $("textarea[name='lessonDesc']").val();
   

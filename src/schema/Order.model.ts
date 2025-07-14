@@ -1,7 +1,7 @@
 // schema/Order.model.ts
 import mongoose, { Schema } from "mongoose";
 
-const orderSchema = new Schema(
+const orderItemSchema = new Schema(
   {
     orderTotal: Number,
     orderDelivery: Number,
@@ -23,4 +23,4 @@ const orderSchema = new Schema(
 );
 
 // ❗ Bu muhim
-export default mongoose.model("Order", orderSchema);
+export default mongoose.model("OrderItem", orderItemSchema);

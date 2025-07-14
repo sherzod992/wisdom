@@ -8,7 +8,7 @@ import lessonController from "./controller/lesson.controller";
 
 
 
-router.get('/member/getTeacher', memberController.getTeacher);
+router.get('/member/', memberController.getTeacher);
 router.post("/member/login", memberController.login);
 router.post("/member/signup", memberController.signup);
 router.post("/member/logout", memberController.verifyAuth, memberController.logout);

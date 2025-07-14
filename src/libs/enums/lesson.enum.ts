@@ -16,6 +16,7 @@
     ART = "ART",
     MUSIC = "MUSIC",
     PHYSICAL_EDUCATION = "PHYSICAL_EDUCATION",
+    IT = "IT"
   }
   export enum ViewGroup {
     PRODUCT = "PRODUCT",
