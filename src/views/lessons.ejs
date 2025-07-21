@@ -1,129 +1,223 @@
 <%- include('includes/header') %>
-<link rel="stylesheet" href="/css/lesson.css" />
+  <link rel="stylesheet" href="/css/lesson.css" />
 
-<body>
-  <nav>
-    <a href="/admin/" class="logo">Wisdom Admin</a>
-    <div class="auth-buttons">
-      <a class="login" href="/admin/logout" onclick="return confirm('Do you want to logout?')">Logout</a>
-    </div>
-  </nav>
-
-  <main style="padding-top: 100px; padding-inline: 6rem;">
-    <section class="restaurant-menu-frame">
-      <div class="board">
-
-        <!-- Lessons Table -->
-        <div class="dishes-table">
-          <h2 class="new-dish-txt">ALL LESSONS</h2>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>T/r</th>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th>Image</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% lessons.forEach(function(lesson, index) { %>
-                <tr>
-                  <td><%= index + 1 %></td>
-                  <td><%= lesson.lessonTitle %></td>
-                  <td>$<%= lesson.lessonPrice %></td>
-                  <td>
-                    <select class="new-product-status" id="<%= lesson._id %>">
-                      <option value="PAUSE" <%= lesson.lessonStatus === "PAUSE" ? "selected" : "" %>>PAUSE</option>
-                      <option value="ACTIVE" <%= lesson.lessonStatus === "ACTIVE" ? "selected" : "" %>>ACTIVE</option>
-                      <option value="DELETE" <%= lesson.lessonStatus === "DELETE" ? "selected" : "" %>>DELETE</option>
-                    </select>
-                  </td>
-                  <td>
-                    <% if (lesson.lessonImages && lesson.lessonImages.length > 0) { %>
-                      <img src="/<%= lesson.lessonImages[0] %>"  style="width: 100px; border-radius: 25px;" />
-                    <% } else { %>
-                      <span>No image</span>
-                    <% } %>
-                  </td>
-                </tr>
-              <% }) %>
-            </tbody>
-          </table>
-          <div class="operation-buttons">
-            <button class="btn btn-primary" id="process-btn">New Lesson</button>
-          </div>
-        </div>
-
-        <!-- Create New Lesson Form -->
-        <form action="/admin/lesson/create" method="POST" enctype="multipart/form-data" class="dish-container">
-          <h3 class="new-dish-txt">NEW LESSON DETAIL</h3>
-
-          <div class="long-input">
-            <label>Lesson Name</label>
-            <input type="text" name="lessonName" placeholder="Name" required />
-            <input type="hidden" name="lessonStatus" value="PAUSE" />
-          </div>
-
-          <div class="half-input-frame">
-            <div class="half-input">
-              <label>Lesson Price</label>
-              <input type="number" name="lessonPrice" placeholder="Price" required />
-            </div>
-          </div>
-
-          <div class="long-input">
-            <label>Lesson Description</label>
-            <textarea name="lessonDesc" placeholder="Write something..."></textarea>
-          </div>
-
-          <div class="long-input">
-            <label>Lesson Video Links</label>
-            <div id="video-links-container">
-              <input type="text" name="lessonVideo[]" placeholder="https://..." />
-            </div>
-            <button type="button" class="btn btn-secondary" id="add-video-link" style="margin-top: 10px;">+ Add another link</button>
-          </div>
-
-          <div class="img-frame">
-            <label>Lesson Images</label>
-            <div class="media-frame">
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="1" id="image-section-1" />
-                <input type="file" id="file" name="lessonImages" class="image-one" required
-                  onchange="previewFileHandler(this, 1)" />
-              </div>
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="2" id="image-section-2" />
-                <input type="file" id="file" name="lessonImages" class="image-two"
-                  onchange="previewFileHandler(this, 2)" />
-              </div>
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="3" id="image-section-3" />
-                <input type="file" id="file" name="lessonImages" class="image-three"
-                  onchange="previewFileHandler(this, 3)" />
-              </div>
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="4" id="image-section-4" />
-                <input type="file" id="file" name="lessonImages" class="image-four"
-                  onchange="previewFileHandler(this, 4)" />
-              </div>
-              <div class="upload-img-box">
-            </div>
-          </div>
-
-          <div class="operation-buttons">
-            <button type="button" class="btn btn-danger" id="cancel-btn">Cancel</button>
-            <button type="submit" class="btn btn-primary" id="create-btn">Create</button>
-          </div>
-        </form>
+  <body>
+    <nav>
+      <a href="/admin/" class="logo">Wisdom Admin</a>
+      <div class="auth-buttons">
+        <a class="login" href="/admin/logout" onclick="return confirm('Do you want to logout?')">Logout</a>
       </div>
-    </section>
-  </main>
+    </nav>
 
- 
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script type="text/javascript" src="/js/lesson.js"></script>
-</body>
-<%- include('includes/footer') %>
+    <main style="padding-top: 100px; padding-inline: 6rem;">
+      <section class="restaurant-menu-frame">
+        <div class="board">
+
+          <!-- Lessons Table -->
+          <div class="dishes-table">
+            <h2 class="new-dish-txt">ALL LESSONS</h2>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>T/r</th>
+                  <th>Description</th>
+                  <th>Collection</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Image</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% lessons.forEach(function(lesson, index) { %>
+                  <tr>
+                    <td>
+                      <%= index + 1 %>
+                    </td>
+                    <td>
+                      <%= lesson.lessonDesc || 'No description' %>
+                    </td>
+                    <td>
+                      <select class="lesson-collection-status" id="collection-<%= lesson._id %>">
+                        <option value="MATH" <%=lesson.lessonCollection==="MATH" ? "selected" : "" %>>MATH</option>
+                        <option value="SCIENCE" <%=lesson.lessonCollection==="SCIENCE" ? "selected" : "" %>>SCIENCE
+                        </option>
+                        <option value="ENGLISH" <%=lesson.lessonCollection==="ENGLISH" ? "selected" : "" %>>ENGLISH
+                        </option>
+                        <option value="HISTORY" <%=lesson.lessonCollection==="HISTORY" ? "selected" : "" %>>HISTORY
+                        </option>
+                        <option value="GEOGRAPHY" <%=lesson.lessonCollection==="GEOGRAPHY" ? "selected" : "" %>
+                          >GEOGRAPHY</option>
+                        <option value="LANGUAGE" <%=lesson.lessonCollection==="LANGUAGE" ? "selected" : "" %>>LANGUAGE
+                        </option>
+                        <option value="ART" <%=lesson.lessonCollection==="ART" ? "selected" : "" %>>ART</option>
+                        <option value="MUSIC" <%=lesson.lessonCollection==="MUSIC" ? "selected" : "" %>>MUSIC</option>
+                        <option value="PHYSICAL_EDUCATION" <%=lesson.lessonCollection==="PHYSICAL_EDUCATION"
+                          ? "selected" : "" %>>PHYSICAL_EDUCATION</option>
+                        <option value="IT" <%=lesson.lessonCollection==="IT" ? "selected" : "" %>>IT</option>
+                      </select>
+                    </td>
+                    <td>$<%= lesson.lessonPrice %>
+                    </td>
+                    <td>
+                      <select class="new-product-status" id="<%= lesson._id %>">
+                        <option value="PAUSE" <%=lesson.lessonStatus==="PAUSE" ? "selected" : "" %>>PAUSE</option>
+                        <option value="ACTIVE" <%=lesson.lessonStatus==="ACTIVE" ? "selected" : "" %>>ACTIVE</option>
+                        <option value="DELETE" <%=lesson.lessonStatus==="DELETE" ? "selected" : "" %>>DELETE</option>
+                      </select>
+                    </td>
+                    <td>
+                      <% if (lesson.lessonImages && lesson.lessonImages.length> 0) { %>
+                        <img src="/<%= lesson.lessonImages[0] %>" style="width: 100px; border-radius: 25px;" />
+                        <% } else { %>
+                          <span>No image</span>
+                          <% } %>
+                    </td>
+                  </tr>
+                  <% }) %>
+              </tbody>
+            </table>
+            <div class="operation-buttons">
+              <button class="btn btn-primary" id="process-btn">New Lesson</button>
+            </div>
+          </div>
+
+          <!-- Create New Lesson Form -->
+          <form action="/admin/lesson/create" method="POST" enctype="multipart/form-data" class="dish-container">
+            <div class="form-header">
+              <h3 class="new-dish-txt">📚 NEW LESSON DETAIL</h3>
+              <button type="button" class="close-form-btn" id="close-form-btn" title="Close Form">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+
+            <div class="long-input">
+              <label>Lesson Name</label>
+              <input type="text" name="lessonName" placeholder="Name" required />
+              <input type="hidden" name="lessonStatus" value="PAUSE" />
+            </div>
+
+            <div class="half-input-frame">
+              <div class="half-input">
+                <label>Lesson Price</label>
+                <input type="number" name="lessonPrice" placeholder="Price" required />
+              </div>
+              <div class="half-input">
+                <label>Lesson Collection</label>
+                <select name="lessonCollection" required>
+                  <option value="">Select Collection</option>
+                  <option value="MATH">MATH</option>
+                  <option value="SCIENCE">SCIENCE</option>
+                  <option value="ENGLISH">ENGLISH</option>
+                  <option value="HISTORY">HISTORY</option>
+                  <option value="GEOGRAPHY">GEOGRAPHY</option>
+                  <option value="LANGUAGE">LANGUAGE</option>
+                  <option value="ART">ART</option>
+                  <option value="MUSIC">MUSIC</option>
+                  <option value="PHYSICAL_EDUCATION">PHYSICAL_EDUCATION</option>
+                  <option value="IT">IT</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="long-input">
+              <label>Lesson Description</label>
+              <textarea name="lessonDesc" placeholder="Write something..." required></textarea>
+            </div>
+
+            <div class="long-input">
+              <label>Lesson Video Links</label>
+              <div id="video-links-container">
+                <input type="text" name="lessonVideo[]" placeholder="https://..." />
+              </div>
+              <button type="button" class="btn btn-secondary" id="add-video-link" style="margin-top: 10px;">+ Add
+                another link</button>
+            </div>
+
+            <div class="image-upload-section">
+              <label class="section-label">📸 Lesson Images</label>
+              <p class="section-description">Upload up to 4 images for your lesson. First image will be used as
+                thumbnail.</p>
+
+              <div class="image-grid">
+                <div class="image-upload-card" data-index="1">
+                  <div class="image-preview-container">
+                    <img src="/img/upload.svg" class="upload-icon" id="image-section-1" />
+                    <div class="upload-overlay">
+                      <div class="upload-content">
+                        <div class="upload-icon-large">📁</div>
+                        <div class="upload-text">Click to upload</div>
+                        <div class="upload-subtext">or drag and drop</div>
+                        <div class="file-types">PNG, JPG up to 10MB</div>
+                      </div>
+                    </div>
+                    <input type="file" name="lessonImages" class="image-upload-input image-one" accept="image/*"
+                      onchange="previewFileHandler(this, 1)" />
+                    <div class="image-badge primary-badge">Primary</div>
+                  </div>
+                </div>
+
+                <div class="image-upload-card" data-index="2">
+                  <div class="image-preview-container">
+                    <img src="/img/upload.svg" class="upload-icon" id="image-section-2" />
+                    <div class="upload-overlay">
+                      <div class="upload-content">
+                        <div class="upload-icon-large">📁</div>
+                        <div class="upload-text">Click to upload</div>
+                        <div class="upload-subtext">or drag and drop</div>
+                        <div class="file-types">PNG, JPG up to 10MB</div>
+                      </div>
+                    </div>
+                    <input type="file" name="lessonImages" class="image-upload-input image-two" accept="image/*"
+                      onchange="previewFileHandler(this, 2)" />
+                  </div>
+                </div>
+
+                <div class="image-upload-card" data-index="3">
+                  <div class="image-preview-container">
+                    <img src="/img/upload.svg" class="upload-icon" id="image-section-3" />
+                    <div class="upload-overlay">
+                      <div class="upload-content">
+                        <div class="upload-icon-large">📁</div>
+                        <div class="upload-text">Click to upload</div>
+                        <div class="upload-subtext">or drag and drop</div>
+                        <div class="file-types">PNG, JPG up to 10MB</div>
+                      </div>
+                    </div>
+                    <input type="file" name="lessonImages" class="image-upload-input image-three" accept="image/*"
+                      onchange="previewFileHandler(this, 3)" />
+                  </div>
+                </div>
+
+                <div class="image-upload-card" data-index="4">
+                  <div class="image-preview-container">
+                    <img src="/img/upload.svg" class="upload-icon" id="image-section-4" />
+                    <div class="upload-overlay">
+                      <div class="upload-content">
+                        <div class="upload-icon-large">📁</div>
+                        <div class="upload-text">Click to upload</div>
+                        <div class="upload-subtext">or drag and drop</div>
+                        <div class="file-types">PNG, JPG up to 10MB</div>
+                      </div>
+                    </div>
+                    <input type="file" name="lessonImages" class="image-upload-input image-four" accept="image/*"
+                      onchange="previewFileHandler(this, 4)" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="operation-buttons">
+              <button type="button" class="btn btn-danger" id="cancel-btn">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="create-btn">Create</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="/js/lesson.js"></script>
+  </body>
+  <%- include('includes/footer') %>

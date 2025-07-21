@@ -1,10 +1,10 @@
-import { ExtendedRequest } from "../libs/types/member";
-import { T } from "../libs/types/common";
+import { ExtendedRequest } from "../models/libs/types/member";
+import { T } from "../models/libs/types/common";
 import { Response } from "express";
-import Errors, { HttpCode, Message } from "../libs/Errors";
+import Errors, { HttpCode, Message } from "../models/libs/Errors";
 import OrderService from "../models/Order.service";
-import { OrderInquiry, OrderUpdateInput } from "../libs/types/order";
-import { OrderStatus } from "../libs/enums/order.enum";
+import { OrderInquiry, OrderUpdateInput } from "../models/libs/types/order";
+import { OrderStatus } from "../models/libs/enums/order.enum";
 
 const orderService = new OrderService();
 

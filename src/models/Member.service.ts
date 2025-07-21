@@ -1,9 +1,9 @@
 import MemberModel from "../schema/Member.model";
-import { MemberInput, Member, LoginInput, MemberUpdateInput } from "../libs/types/member";
-import { MemberStatus, MemberType } from "../libs/enums/member.enum";
-import Errors,{ HttpCode,Message } from "../libs/Errors";
+import { MemberInput, Member, LoginInput, MemberUpdateInput } from "./libs/types/member";
+import { MemberStatus, MemberType } from "./libs/enums/member.enum";
+import Errors,{ HttpCode,Message } from "./libs/Errors";
 import * as bcrypt from "bcryptjs";
-import { shapeIntoMongooseObjectId } from "../libs/config";
+import { shapeIntoMongooseObjectId } from "./libs/config";
 import LessonModel from "../schema/Lesson.model";
 
 class MemberService {

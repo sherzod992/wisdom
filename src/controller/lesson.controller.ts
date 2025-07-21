@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import Errors, { HttpCode, Message } from "../libs/Errors";
-import { T } from "../libs/types/common";
-import { LessonInput, LessonInquiry } from "../libs/types/lesson";
-import { AdminRequest, ExtendedRequest } from "../libs/types/member";
+import Errors, { HttpCode, Message } from "../models/libs/Errors";
+import { T } from "../models/libs/types/common";
+import { LessonInput, LessonInquiry } from "../models/libs/types/lesson";
+import { AdminRequest, ExtendedRequest } from "../models/libs/types/member";
 import LessonService from "../models/Lesson.service";
-import { LessonCollection } from "../libs/enums/lesson.enum";
+import { LessonCollection } from "../models/libs/enums/lesson.enum";
 
 const lessonService = new LessonService();
 const lessonController: T = {};
@@ -66,14 +66,26 @@ lessonController.createLesson = async (req: AdminRequest, res: Response) => {
   try {
     console.log("createLesson");
     console.log("req.body", req.body);
-
-    const data: LessonInput = req.body;
+    console.log("req.files", req.files);
 
     if (!req.files || !Array.isArray(req.files)) {
       throw new Errors(HttpCode.INTERNAL_SERVER_ERROR, Message.CREATE_FAILED);
     }
 
-    data.lessonImages = req.files.map((file: any) => file.path.replace(/\\/g, "/"));
+    // 폼 데이터를 올바른 타입으로 변환
+    const data: LessonInput = {
+      lessonName: req.body.lessonName,
+      lessonTitle: req.body.lessonTitle || req.body.lessonName,
+      lessonDesc: req.body.lessonDesc,
+      lessonPrice: Number(req.body.lessonPrice),
+      lessonCollection: req.body.lessonCollection,
+      lessonStatus: req.body.lessonStatus || "PAUSE",
+      lessonVideo: Array.isArray(req.body.lessonVideo) ? req.body.lessonVideo : (req.body.lessonVideo ? [req.body.lessonVideo] : []),
+      lessonImages: req.files.map((file: any) => file.path.replace(/\\/g, "/")),
+      lessonViews: 0
+    };
+
+    console.log("Processed data:", data);
 
     await lessonService.createLesson(data);
 
@@ -95,10 +107,14 @@ lessonController.updateChusenLesson = async (req: Request, res: Response) => {
     const input = req.body;
     const result = await lessonService.updateChusenLesson(id, input);
 
-    res.status(HttpCode.OK).json({ data: result });
+    res.status(HttpCode.OK).json({ success: true, data: result });
   } catch (err) {
-    const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
-    res.send(`<script>alert("${message}"); window.location.replace('/admin/lesson/all')</script>`);
+    console.log("ERROR, updateChosenLesson", err);
+    if (err instanceof Errors) {
+      res.status(err.code).json({ success: false, message: err.message });
+    } else {
+      res.status(Errors.standard.code).json({ success: false, message: Message.SOMETHING_WENT_WRONG });
+    }
   }
 };
 

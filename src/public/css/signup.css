@@ -105,33 +105,122 @@ form.sign-in-form {
 }
 
 .social-text {
-  padding: 0.7rem 0;
-  font-size: 1rem;
+  padding: 1rem 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+  position: relative;
+}
+
+.social-text::before,
+.social-text::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 25%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #ddd, transparent);
+}
+
+.social-text::before {
+  left: 0;
+}
+
+.social-text::after {
+  right: 0;
 }
 
 .social-media {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1rem;
 }
 
 .social-icon {
-  height: 46px;
-  width: 46px;
+  height: 48px;
+  width: 48px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 0.45rem;
-  color: #333;
-  border-radius: 50%;
-  border: 1px solid #333;
+  color: #666;
+  border-radius: 12px;
+  border: 2px solid #e1e5e9;
   text-decoration: none;
-  font-size: 1.1rem;
-  transition: 0.3s;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.social-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.social-icon:hover::before {
+  left: 100%;
 }
 
 .social-icon:hover {
-  color: #6366f1;
-  border-color: #6366f1;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Google */
+.social-icon.google:hover {
+  color: #fff;
+  background: linear-gradient(135deg, #DB4437, #FF6B6B);
+  border-color: #DB4437;
+  box-shadow: 0 8px 25px rgba(219, 68, 55, 0.3);
+}
+
+/* Facebook */
+.social-icon.facebook:hover {
+  color: #fff;
+  background: linear-gradient(135deg, #4267B2, #5B7BD5);
+  border-color: #4267B2;
+  box-shadow: 0 8px 25px rgba(66, 103, 178, 0.3);
+}
+
+/* Apple */
+.social-icon.apple:hover {
+  color: #fff;
+  background: linear-gradient(135deg, #000000, #333333);
+  border-color: #000000;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* GitHub */
+.social-icon.github:hover {
+  color: #fff;
+  background: linear-gradient(135deg, #333333, #4A4A4A);
+  border-color: #333333;
+  box-shadow: 0 8px 25px rgba(51, 51, 51, 0.3);
+}
+
+/* Discord */
+.social-icon.discord:hover {
+  color: #fff;
+  background: linear-gradient(135deg, #5865F2, #7289DA);
+  border-color: #5865F2;
+  box-shadow: 0 8px 25px rgba(88, 101, 242, 0.3);
+}
+
+/* Microsoft */
+.social-icon.microsoft:hover {
+  color: #fff;
+  background: linear-gradient(135deg, #00A4EF, #0078D4);
+  border-color: #00A4EF;
+  box-shadow: 0 8px 25px rgba(0, 164, 239, 0.3);
 }
 
 .btn {
@@ -270,6 +359,29 @@ form.sign-in-form {
 
 .container.sign-up-mode .right-panel {
   pointer-events: all;
+}
+
+/* Responsive Social Media */
+@media (max-width: 480px) {
+  .social-media {
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  
+  .social-icon {
+    height: 42px;
+    width: 42px;
+    font-size: 1.1rem;
+  }
+  
+  .social-text {
+    font-size: 0.85rem;
+  }
+  
+  .social-text::before,
+  .social-text::after {
+    width: 20%;
+  }
 }
 
 @media (max-width: 870px) {

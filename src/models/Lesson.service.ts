@@ -1,11 +1,11 @@
 import LessonModel from "../schema/Lesson.model";
-import Errors, { HttpCode, Message } from "../libs/Errors";
-import {Lesson, LessonInput, LessonInquiry, LessonUpdateInput} from  "../libs/types/lesson";
-import { shapeIntoMongooseObjectId } from "../libs/config";
-import { T } from "../libs/types/common";
-import { LessonStatus, ViewGroup } from "../libs/enums/lesson.enum";
+import Errors, { HttpCode, Message } from "./libs/Errors";
+import {Lesson, LessonInput, LessonInquiry, LessonUpdateInput} from  "./libs/types/lesson";
+import { shapeIntoMongooseObjectId } from "./libs/config";
+import { T } from "./libs/types/common";
+import { LessonStatus, ViewGroup } from "./libs/enums/lesson.enum";
 import { ObjectId } from "mongoose";
-import { ViewInput } from "../libs/types/view";
+import { ViewInput } from "./libs/types/view";
 import ViewService from "./View.service";
 
 class LessonService{
@@ -18,13 +18,13 @@ class LessonService{
     public async getLessons(inquiry:LessonInquiry):Promise<Lesson[]>{
         const match:T ={lessonStatus:LessonStatus.ACTIVE};
         if(inquiry.lessonCollection)
-            match.productCollection = inquiry.lessonCollection;
+            match.lessonCollection = inquiry.lessonCollection;
         // productCollection bo‘lsa, matchga qo‘shish."
         if(inquiry.search) {
-            match.productName = {$regex: new RegExp(inquiry.search, "i")}; // i bu flag katta kichik harflar insensitive
+            match.lessonTitle = {$regex: new RegExp(inquiry.search, "i")}; // i bu flag katta kichik harflar insensitive
         }
         //search bo‘lsa, productNameni regulyar ifoda bilan qidirish (katta kichik harflar farqini e'tiborsiz qoldirish)."
-        const sort: T = inquiry.order === "productPrice" // yuqoridan pastga
+                 const sort: T = inquiry.order === "lessonPrice" // yuqoridan pastga
          ? {[inquiry.order] : 1} // yuqoridan pastga True
          : {[inquiry.order] : -1};// pastdan yuqoriga  False
     
@@ -46,7 +46,7 @@ class LessonService{
         
         let result  = await this.lessonModel.findOne({
             _id : productId,
-            productStatus: LessonStatus.ACTIVE  
+            lessonStatus: LessonStatus.ACTIVE  
         })
         .exec();
       
@@ -70,7 +70,7 @@ class LessonService{
                 // Increase Counts
                 result = await this.lessonModel.findByIdAndUpdate(
                     productId,
-                    { $inc: { productViews: +1 }},
+                    { $inc: { lessonViews: +1 }},
                     { new: true }
                 )
             }

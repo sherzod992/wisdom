@@ -1,6 +1,6 @@
-import { ExtendedRequest } from "../libs/types/member";
-import { T } from "../libs/types/common";
+import { ExtendedRequest } from "../models/libs/types/member";
+import { T } from "../models/libs/types/common";
 import { Response } from "express";
-import Errors, { HttpCode, Message } from "../libs/utils/Errors";
+import Errors, { HttpCode, Message } from "../models/libs/Errors";
 
 

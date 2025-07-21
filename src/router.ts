@@ -1,5 +1,5 @@
 import express from "express";
-import makeUploader from "./libs/utils/uploader";
+import makeUploader from "./models/libs/utils/uploader";
 
 const router = express.Router();
 import memberController from "./controller/member.controller";

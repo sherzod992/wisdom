@@ -1,11 +1,11 @@
-import { T } from "../libs/types/common";
+import { T } from "../models/libs/types/common";
 import { NextFunction, Request, Response } from "express";
 import MemberService from "../models/Member.service";
-import { AdminRequest, ExtendedRequest, LoginInput ,MemberInput,} from "../libs/types/member";
-import { MemberType } from "../libs/enums/member.enum";
-import Errors, { HttpCode, Message } from "../libs/Errors";
+import { AdminRequest, ExtendedRequest, LoginInput ,MemberInput,} from "../models/libs/types/member";
+import { MemberType } from "../models/libs/enums/member.enum";
+import Errors, { HttpCode, Message } from "../models/libs/Errors";
 import AuthService from "../models/Auth.service";
-import { AUTH_TIMER } from "../libs/config";
+import { AUTH_TIMER } from "../models/libs/config";
 
 const memberService = new MemberService();
 const memberController:T ={}

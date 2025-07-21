@@ -1,7 +1,7 @@
 import express from 'express';
 import adminController from './controller/admin.controller';
 
-import makeUploader from './libs/utils/uploader';
+import makeUploader from './models/libs/utils/uploader';
 import lessonController from './controller/lesson.controller';
 
 

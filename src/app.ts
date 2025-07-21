@@ -5,12 +5,12 @@ import router from './router';
 import routerAdmin from "./router-admin"
 import morgan from "morgan"
 import cookieParser from "cookie-parser";
-import { MORGAN_FORMAT } from "./libs/config";
+import { MORGAN_FORMAT } from "./models/libs/config";
 
 
 import session from 'express-session';
 import ConnectMongoDB from 'connect-mongodb-session';
-import { T } from './libs/types/common';
+import { T } from './models/libs/types/common';
 
 const MongoDBStore = ConnectMongoDB(session);
 const store = new MongoDBStore({
