@@ -17,7 +17,6 @@ class MemberService {
 
   /** SPA Students Page **/
 
-
   public async getTeacher(): Promise<Member>{
     const result = await this.memberModel
     .findOne({ memberType: MemberType.ADMIN})
@@ -26,19 +25,14 @@ class MemberService {
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
     return result as unknown as Member;
   }
+
   public async signup(input: MemberInput): Promise<Member> {
-    if (!input.memberNick) {
+    if (!input.memberNick || !input.memberPhone || !input.memberPassword) {
       throw new Errors(HttpCode.BAD_REQUEST,Message.SOMETHING_WENT_WRONG);
     }
     
-    // 소셜 로그인이 아닌 경우만 비밀번호 필수
-    if (!input.provider || input.provider === 'LOCAL') {
-      if (!input.memberPassword) {
-        throw new Errors(HttpCode.BAD_REQUEST,Message.SOMETHING_WENT_WRONG);
-      }
-      const salt = await bcrypt.genSalt();
-      input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
-    }
+    const salt = await bcrypt.genSalt();
+    input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
   
     try {
       const result = await this.memberModel.create(input);
@@ -49,6 +43,7 @@ class MemberService {
       throw new Errors(HttpCode.INTERNAL_SERVER_ERROR, Message.CREATE_FAILED);
     }
   }
+
   public async login(input: LoginInput): Promise<Member> {
     if (!input.memberNick || !input.memberPassword) {
       throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
@@ -62,13 +57,13 @@ class MemberService {
       throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
     }
   
-    // === PAROL TO‘G‘RILIGINI TEKSHIRISH ===
+    // === PAROL TO'G'RILIGINI TEKSHIRISH ===
     const isMatch = await bcrypt.compare(input.memberPassword, member.memberPassword!);
     if (!isMatch) {
       throw new Errors(HttpCode.BAD_REQUEST, Message.WRONG_PASSWORD);
     }
   
-    // === FOYDALANUVCHINI TO‘LIQ YUKLASH ===
+    // === FOYDALANUVCHINI TO'LIQ YUKLASH ===
     const result = await this.memberModel.findById(member._id).exec();
     if (!result) {
       throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
@@ -76,6 +71,7 @@ class MemberService {
   
     return result.toJSON() as unknown as Member;
   }
+
   public async getMemberDetail(member: Member): Promise<Member> {
     const memberId = shapeIntoMongooseObjectId(member._id);
     const result = await this.memberModel
@@ -89,12 +85,14 @@ class MemberService {
   
     return result;
   }
+
   public async updateMember(member: Member, input: MemberInput): Promise<Member> {
     const memberId = shapeIntoMongooseObjectId(member._id);
     const result = await this.memberModel.findOneAndUpdate({ _id: memberId }, input, { new: true }).exec();
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
     return result.toObject() as unknown as Member;
   }
+
   public async getTopUsers(): Promise<Member[]> {
     const result = await this.memberModel
       .find({ memberStatus: MemberStatus.ACTIVE, memberPoints: { $gte: 5 } })
@@ -103,29 +101,9 @@ class MemberService {
       .lean<Member[]>()
       .exec();
   
-    if (!result || result.length === 0) {
-      throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-    }
-  
-    return result;
+    // 데이터가 없어도 에러를 발생시키지 않고 빈 배열 반환
+    return result || [];
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**SSR Admin panel */
   public async postSignup(input: MemberInput): Promise<Member> {
@@ -145,6 +123,7 @@ class MemberService {
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
     }
   }
+
   public async postLogin(input:LoginInput):Promise<Member>{
     const member = await this.memberModel
     .findOne({memberNick: input.memberNick},{memberNick: 1, memberPassword: 1 })
@@ -162,6 +141,7 @@ class MemberService {
   
     return result.toObject() as unknown as Member;
   }
+
   public async getAllStudents(): Promise<Member[]> {
     const result = await this.memberModel
         .find({ memberType: MemberType.STUDENT })

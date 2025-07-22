@@ -1,0 +1,38 @@
+yarn run v1.22.22
+$ ts-node src/server.ts
+/Users/sherzodbeksharobiddinov/Desktop/wisdom/src
+__dirname /Users/sherzodbeksharobiddinov/Desktop/wisdom/src
+(node:51229) [MONGOOSE] DeprecationWarning: Mongoose: the `strictQuery` option will be switched back to `false` by default in Mongoose 7. Use `mongoose.set('strictQuery', false);` if you want to prepare for this change. Or use `mongoose.set('strictQuery', true);` to suppress this warning.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Connected to MongoDB
+Server is running on port 3011
+Admin project on http://localhost:3011/admin
+getTopUsers
+GET /member/top-users 14.110 [200] 
+ 
+getProducts
+getProducts
+getTopUsers
+GET /member/top-users 4.600 [304] 
+ 
+getTopUsers
+GET /member/top-users 16.311 [304] 
+ 
+GET /product/all?order=undefined&page=1&limit=5 162.253 [304] 
+ 
+GET /product/all?order=createdAt&page=1&limit=8 155.772 [304] 
+ 
+getProducts
+getProducts
+GET /product/all?order=undefined&page=1&limit=5 5.749 [304] 
+ 
+GET /product/all?order=createdAt&page=1&limit=8 4.375 [304] 
+ 
+getProducts
+GET /product/all 9.714 [200] 
+ 
+home
+GET /admin/ 29.503 [304] 
+ 
+GET /js/home.js 1.604 [404] 
+ 

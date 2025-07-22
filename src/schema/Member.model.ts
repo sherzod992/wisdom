@@ -1,7 +1,6 @@
 import mongoose, {Schema} from 'mongoose';
 
 import { MemberType, MemberStatus } from '../models/libs/enums/member.enum';
-import { AuthProvider } from '../models/libs/types/member';
 
 const memberSchema = new Schema({
     memberType: {
@@ -25,31 +24,14 @@ const memberSchema = new Schema({
     memberPhone:{
         type: String,
         index: {unique:true, sparse:true},
-        required: false, // 소셜 로그인시 선택적
+        required: true,
     },
 
     memberPassword : {
         type:String,
         select:false,
         minlength: 4, 
-        required: false // 소셜 로그인시 선택적
-    },
-
-    memberEmail: {
-        type: String,
-        index: {unique:true, sparse:true},
-        required: false,
-    },
-
-    provider: {
-        type: String,
-        enum: AuthProvider,
-        default: AuthProvider.LOCAL,
-    },
-
-    providerId: {
-        type: String,
-        required: false,
+        required: true
     },
 
     memberAddress: {
@@ -69,9 +51,7 @@ const memberSchema = new Schema({
         default:0
     },
 
-
 },{timestamps:true} //updatedAt, createdAt
 )
-
 
 export default mongoose.model("Member",memberSchema)
