@@ -3,14 +3,9 @@ import express from 'express';
 import path, { dirname } from 'path';
 import router from './router';
 import routerAdmin from "./router-admin"
-import routerAuth from "./router-auth"
 import morgan from "morgan"
 import cookieParser from "cookie-parser";
 import { MORGAN_FORMAT } from "./models/libs/config";
-import passport from 'passport';
-import './config/passport';
-import './config/passport-social';
-
 
 import session from 'express-session';
 import ConnectMongoDB from 'connect-mongodb-session';
@@ -33,7 +28,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors({ credentials: true, origin: true}))
 app.use(morgan(MORGAN_FORMAT)) // login mexanizimini ishlatish
-//
 
 //sessionni yaratish
 app.use(session({  // yuqoridagi sessionsni ichiga optionlarni yozamiz
@@ -43,11 +37,6 @@ app.use(session({  // yuqoridagi sessionsni ichiga optionlarni yozamiz
     resave: false, // har bir sorovda sessionni yangilash
     saveUninitialized: false, // har bitta foydalanuvchiga sessionni yaratadi 
 }));
-
-// Passport 미들웨어 추가
-app.use(passport.initialize());
-app.use(passport.session());
-
 
 app.use(function(req, res, next){
     const sessionInterface = req.session as T;
@@ -60,11 +49,8 @@ app.set("views",path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 /** 4-ROUTERS **/
-app.use("/auth", routerAuth);
 app.use("/admin", routerAdmin);
-app.use("/", router) // burak SPA: react 
-
-
+app.use("/", router); // 기본 라우터로 복원
 
 // SSR: EJS
 export default app;  
