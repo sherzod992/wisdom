@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wisdom SPA - React Example</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav h1 {
+            color: #333;
+        }
+
+        .nav button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn:hover {
+            background: #5a6fd8;
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .social-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .social-btn.kakao {
+            background: #FEE500;
+            color: #000;
+        }
+
+        .social-btn.naver {
+            background: #03C75A;
+            color: white;
+        }
+
+        .social-btn.github {
+            background: #333;
+            color: white;
+        }
+
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .error {
+            background: #ffe6e6;
+            color: #d32f2f;
+            border: 1px solid #d32f2f;
+        }
+
+        .success {
+            background: #e6ffe6;
+            color: #2e7d32;
+            border: 1px solid #2e7d32;
+        }
+
+        .loading {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #1565c0;
+        }
+
+        .dashboard {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, createContext, useContext } = React;
+
+        // Auth Context
+        const AuthContext = createContext();
+
+        const AuthProvider = ({ children }) => {
+            const [user, setUser] = useState(null);
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                checkAuthStatus();
+            }, []);
+
+            const checkAuthStatus = async () => {
+                const token = localStorage.getItem('accessToken');
+                if (token) {
+                    try {
+                        const response = await fetch('/member/detail', {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        if (response.ok) {
+                            const userData = await response.json();
+                            setUser(userData);
+                        } else {
+                            localStorage.removeItem('accessToken');
+                        }
+                    } catch (error) {
+                        console.error('Auth check failed:', error);
+                        localStorage.removeItem('accessToken');
+                    }
+                }
+                setLoading(false);
+            };
+
+            const login = async (credentials) => {
+                try {
+                    const response = await fetch('/member/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(credentials)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        localStorage.setItem('accessToken', data.accessToken);
+                        setUser(data.member);
+                        return { success: true };
+                    } else {
+                        const error = await response.json();
+                        return { success: false, message: error.message };
+                    }
+                } catch (error) {
+                    return { success: false, message: '네트워크 오류가 발생했습니다.' };
+                }
+            };
+
+            const signup = async (userData) => {
+                try {
+                    const response = await fetch('/member/signup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(userData)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        localStorage.setItem('accessToken', data.accessToken);
+                        setUser(data.member);
+                        return { success: true };
+                    } else {
+                        const error = await response.json();
+                        return { success: false, message: error.message };
+                    }
+                } catch (error) {
+                    return { success: false, message: '네트워크 오류가 발생했습니다.' };
+                }
+            };
+
+            const logout = () => {
+                localStorage.removeItem('accessToken');
+                setUser(null);
+            };
+
+            return (
+                <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
+                    {children}
+                </AuthContext.Provider>
+            );
+        };
+
+        const useAuth = () => useContext(AuthContext);
+
+        // Login Component
+        const LoginForm = ({ onSwitchToSignup }) => {
+            const [formData, setFormData] = useState({
+                memberIdentifier: '',
+                memberPassword: ''
+            });
+            const [message, setMessage] = useState('');
+            const [messageType, setMessageType] = useState('');
+            const [isLoading, setIsLoading] = useState(false);
+
+            const { login } = useAuth();
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setIsLoading(true);
+                setMessage('');
+
+                const result = await login({
+                    memberNick: formData.memberIdentifier,
+                    memberPassword: formData.memberPassword
+                });
+
+                if (result.success) {
+                    setMessage('로그인 성공!');
+                    setMessageType('success');
+                } else {
+                    setMessage(result.message || '로그인에 실패했습니다.');
+                    setMessageType('error');
+                }
+                setIsLoading(false);
+            };
+
+            const handleSocialLogin = (provider) => {
+                window.location.href = `/member/auth/${provider}`;
+            };
+
+            return (
+                <div className="auth-container">
+                    <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>로그인</h2>
+
+                    {message && (
+                        <div className={`message ${messageType}`}>
+                            {message}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>이메일 또는 닉네임</label>
+                            <input
+                                type="text"
+                                value={formData.memberIdentifier}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    memberIdentifier: e.target.value
+                                })}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>비밀번호</label>
+                            <input
+                                type="password"
+                                value={formData.memberPassword}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    memberPassword: e.target.value
+                                })}
+                                required
+                            />
+                        </div>
+
+                        <button type="submit" className="submit-btn" disabled={isLoading}>
+                            {isLoading ? '로그인 중...' : '로그인'}
+                        </button>
+                    </form>
+
+                    <div className="social-buttons">
+                        <button
+                            className="social-btn kakao"
+                            onClick={() => handleSocialLogin('kakao')}
+                        >
+                            카카오
+                        </button>
+                        <button
+                            className="social-btn naver"
+                            onClick={() => handleSocialLogin('naver')}
+                        >
+                            네이버
+                        </button>
+                        <button
+                            className="social-btn github"
+                            onClick={() => handleSocialLogin('github')}
+                        >
+                            깃허브
+                        </button>
+                    </div>
+
+                    <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                        계정이 없으신가요? {' '}
+                        <button
+                            type="button"
+                            onClick={onSwitchToSignup}
+                            style={{ background: 'none', border: 'none', color: '#667eea', cursor: 'pointer', textDecoration: 'underline' }}
+                        >
+                            회원가입
+                        </button>
+                    </p>
+                </div>
+            );
+        };
+
+        // Signup Component
+        const SignupForm = ({ onSwitchToLogin }) => {
+            const [formData, setFormData] = useState({
+                memberNick: '',
+                memberEmail: '',
+                memberPhone: '',
+                memberPassword: '',
+                confirmPassword: ''
+            });
+            const [message, setMessage] = useState('');
+            const [messageType, setMessageType] = useState('');
+            const [isLoading, setIsLoading] = useState(false);
+
+            const { signup } = useAuth();
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+
+                if (formData.memberPassword !== formData.confirmPassword) {
+                    setMessage('비밀번호가 일치하지 않습니다.');
+                    setMessageType('error');
+                    return;
+                }
+
+                setIsLoading(true);
+                setMessage('');
+
+                const result = await signup({
+                    memberNick: formData.memberNick,
+                    memberEmail: formData.memberEmail,
+                    memberPhone: formData.memberPhone,
+                    memberPassword: formData.memberPassword
+                });
+
+                if (result.success) {
+                    setMessage('회원가입 성공!');
+                    setMessageType('success');
+                } else {
+                    setMessage(result.message || '회원가입에 실패했습니다.');
+                    setMessageType('error');
+                }
+                setIsLoading(false);
+            };
+
+            const handleSocialLogin = (provider) => {
+                window.location.href = `/member/auth/${provider}`;
+            };
+
+            return (
+                <div className="auth-container">
+                    <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>회원가입</h2>
+
+                    {message && (
+                        <div className={`message ${messageType}`}>
+                            {message}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>닉네임</label>
+                            <input
+                                type="text"
+                                value={formData.memberNick}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    memberNick: e.target.value
+                                })}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>이메일</label>
+                            <input
+                                type="email"
+                                value={formData.memberEmail}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    memberEmail: e.target.value
+                                })}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>전화번호</label>
+                            <input
+                                type="tel"
+                                value={formData.memberPhone}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    memberPhone: e.target.value
+                                })}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>비밀번호</label>
+                            <input
+                                type="password"
+                                value={formData.memberPassword}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    memberPassword: e.target.value
+                                })}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>비밀번호 확인</label>
+                            <input
+                                type="password"
+                                value={formData.confirmPassword}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    confirmPassword: e.target.value
+                                })}
+                                required
+                            />
+                        </div>
+
+                        <button type="submit" className="submit-btn" disabled={isLoading}>
+                            {isLoading ? '가입 중...' : '회원가입'}
+                        </button>
+                    </form>
+
+                    <div className="social-buttons">
+                        <button
+                            className="social-btn kakao"
+                            onClick={() => handleSocialLogin('kakao')}
+                        >
+                            카카오
+                        </button>
+                        <button
+                            className="social-btn naver"
+                            onClick={() => handleSocialLogin('naver')}
+                        >
+                            네이버
+                        </button>
+                        <button
+                            className="social-btn github"
+                            onClick={() => handleSocialLogin('github')}
+                        >
+                            깃허브
+                        </button>
+                    </div>
+
+                    <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                        이미 계정이 있으신가요? {' '}
+                        <button
+                            type="button"
+                            onClick={onSwitchToLogin}
+                            style={{ background: 'none', border: 'none', color: '#667eea', cursor: 'pointer', textDecoration: 'underline' }}
+                        >
+                            로그인
+                        </button>
+                    </p>
+                </div>
+            );
+        };
+
+        // Dashboard Component
+        const Dashboard = () => {
+            const { user, logout } = useAuth();
+
+            return (
+                <div className="dashboard">
+                    <h2>환영합니다!</h2>
+
+                    {user && (
+                        <div className="user-info">
+                            <h3>사용자 정보</h3>
+                            <p><strong>닉네임:</strong> {user.memberNick}</p>
+                            {user.memberEmail && <p><strong>이메일:</strong> {user.memberEmail}</p>}
+                            {user.memberPhone && <p><strong>전화번호:</strong> {user.memberPhone}</p>}
+                            <p><strong>가입일:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+                        </div>
+                    )}
+
+                    <button
+                        onClick={logout}
+                        style={{
+                            background: '#dc3545',
+                            color: 'white',
+                            border: 'none',
+                            padding: '10px 20px',
+                            borderRadius: '5px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        로그아웃
+                    </button>
+                </div>
+            );
+        };
+
+        // Main App Component
+        const App = () => {
+            const { user, loading } = useAuth();
+            const [currentView, setCurrentView] = useState('login'); // 'login' or 'signup'
+
+            if (loading) {
+                return (
+                    <div className="app-container">
+                        <div className="message loading">
+                            로딩 중...
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="app-container">
+                    <nav className="nav">
+                        <h1>Wisdom SPA</h1>
+                        {user && (
+                            <span>안녕하세요, {user.memberNick}님!</span>
+                        )}
+                    </nav>
+
+                    {user ? (
+                        <Dashboard />
+                    ) : (
+                        currentView === 'login' ? (
+                            <LoginForm onSwitchToSignup={() => setCurrentView('signup')} />
+                        ) : (
+                            <SignupForm onSwitchToLogin={() => setCurrentView('login')} />
+                        )
+                    )}
+                </div>
+            );
+        };
+
+        // Render App
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            <AuthProvider>
+                <App />
+            </AuthProvider>
+        );
+    </script>
+</body>
+
+</html>

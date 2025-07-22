@@ -27,11 +27,18 @@ class MemberService {
     return result as unknown as Member;
   }
   public async signup(input: MemberInput): Promise<Member> {
-    if (!input.memberNick || !input.memberPhone || !input.memberPassword) {
+    if (!input.memberNick) {
       throw new Errors(HttpCode.BAD_REQUEST,Message.SOMETHING_WENT_WRONG);
     }
-    const salt = await bcrypt.genSalt();
-    input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
+    
+    // 소셜 로그인이 아닌 경우만 비밀번호 필수
+    if (!input.provider || input.provider === 'LOCAL') {
+      if (!input.memberPassword) {
+        throw new Errors(HttpCode.BAD_REQUEST,Message.SOMETHING_WENT_WRONG);
+      }
+      const salt = await bcrypt.genSalt();
+      input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
+    }
   
     try {
       const result = await this.memberModel.create(input);
@@ -56,7 +63,7 @@ class MemberService {
     }
   
     // === PAROL TO‘G‘RILIGINI TEKSHIRISH ===
-    const isMatch = await bcrypt.compare(input.memberPassword, member.memberPassword);
+    const isMatch = await bcrypt.compare(input.memberPassword, member.memberPassword!);
     if (!isMatch) {
       throw new Errors(HttpCode.BAD_REQUEST, Message.WRONG_PASSWORD);
     }
@@ -129,7 +136,7 @@ class MemberService {
 
     // if (exist) throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
     const salt = await bcrypt.genSalt();
-    input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
+    input.memberPassword = await bcrypt.hash(input.memberPassword!, salt);
      try {
       const result = await this.memberModel.create(input);
       result.memberPassword = "";

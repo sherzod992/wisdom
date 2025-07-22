@@ -3,9 +3,13 @@ import express from 'express';
 import path, { dirname } from 'path';
 import router from './router';
 import routerAdmin from "./router-admin"
+import routerAuth from "./router-auth"
 import morgan from "morgan"
 import cookieParser from "cookie-parser";
 import { MORGAN_FORMAT } from "./models/libs/config";
+import passport from 'passport';
+import './config/passport';
+import './config/passport-social';
 
 
 import session from 'express-session';
@@ -36,9 +40,13 @@ app.use(session({  // yuqoridagi sessionsni ichiga optionlarni yozamiz
     secret: String(process.env.SESSION_SECRET), // sessionni shifrlash (.env faylidan olib kelamiz)
     cookie: { maxAge: 1000 * 3600 * 3 }, // cookilarni saqlanish vaqtini belgilash
     store: store,  //sessionni saqlash uchun 
-    resave: true, // har bir sorovda sessionni yangilash
-    saveUninitialized: true, // har bitta foydalanuvchiga sessionni yaratadi 
+    resave: false, // har bir sorovda sessionni yangilash
+    saveUninitialized: false, // har bitta foydalanuvchiga sessionni yaratadi 
 }));
+
+// Passport 미들웨어 추가
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.use(function(req, res, next){
@@ -52,6 +60,7 @@ app.set("views",path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 /** 4-ROUTERS **/
+app.use("/auth", routerAuth);
 app.use("/admin", routerAdmin);
 app.use("/", router) // burak SPA: react 
 

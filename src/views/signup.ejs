@@ -7,21 +7,54 @@
         <div class="signin-signup">
 
           <!-- SIGN IN FORM -->
-          <form action="/admin/login" method="POST" class="sign-in-form">
+          <form action="/auth/login" method="POST" class="sign-in-form">
             <h2 class="title">Sign in</h2>
+
+            <!-- 에러 메시지 표시 -->
+            <div id="error-message"
+              style="display: none; color: #ff4757; margin-bottom: 15px; text-align: center; padding: 10px; background-color: #ffe6e6; border-radius: 5px;">
+            </div>
+
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input type="text" name="memberNick" placeholder="Nickname" required />
+              <input type="text" name="memberIdentifier" placeholder="닉네임 또는 이메일" required />
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
               <input type="password" name="memberPassword" placeholder="Password" required />
             </div>
             <input type="submit" value="Login" class="btn solid" />
+
+            <!-- 비밀번호 재설정 링크 -->
+            <p class="forgot-password">
+              <a href="#" id="forgot-password-link">비밀번호를 잊으셨나요?</a>
+            </p>
+
+            <!-- 소셜 로그인 버튼들 -->
+            <div class="social-login">
+              <p class="social-text">Or Sign in with social platforms</p>
+              <div class="social-media">
+                <a href="/auth/kakao" class="social-icon kakao" title="카카오 로그인">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M12 3C6.48 3 2 6.58 2 11c0 2.8 1.8 5.28 4.5 6.75L5.7 21l3.8-2.25c.83.15 1.7.25 2.5.25 5.52 0 10-3.58 10-8S17.52 3 12 3z" />
+                  </svg>
+                </a>
+                <a href="/auth/naver" class="social-icon naver" title="네이버 로그인">
+                  <span style="font-weight: bold; font-size: 16px;">N</span>
+                </a>
+                <a href="/auth/github" class="social-icon github" title="깃허브 로그인">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385c.6.105.825-.255.825-.57c0-.285-.015-1.23-.015-2.235c-3.015.555-3.795-.735-4.035-1.41c-.135-.345-.72-1.41-1.23-1.695c-.42-.225-1.02-.78-.015-.795c.945-.015 1.62.87 1.845 1.23c1.08 1.815 2.805 1.305 3.495.99c.105-.78.42-1.305.765-1.605c-2.67-.3-5.46-1.335-5.46-5.925c0-1.305.465-2.385 1.23-3.225c-.12-.3-.54-1.53.12-3.18c0 0 1.005-.315 3.3 1.23c.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23c.66 1.65.24 2.88.12 3.18c.765.84 1.23 1.905 1.23 3.225c0 4.605-2.805 5.625-5.475 5.925c.435.375.81 1.095.81 2.22c0 1.605-.015 2.895-.015 3.3c0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
           </form>
 
           <!-- SIGN UP FORM -->
-          <form action="/admin/signup" method="POST" class="sign-up-form" onsubmit="return validateForm()">
+          <form action="/auth/signup" method="POST" class="sign-up-form" onsubmit="return validateForm()">
             <h2 class="title">Sign up</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
@@ -29,6 +62,10 @@
             </div>
             <div class="input-field">
               <i class="fas fa-envelope"></i>
+              <input type="email" name="memberEmail" class="member-email" placeholder="Email" required />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-phone"></i>
               <input type="text" name="memberPhone" class="member-phone" placeholder="Phone" required />
             </div>
             <div class="input-field">
@@ -41,6 +78,28 @@
                 required />
             </div>
             <input type="submit" class="btn" value="Sign up" />
+
+            <!-- 소셜 회원가입 버튼들 -->
+            <div class="social-login">
+              <p class="social-text">Or Sign up with social platforms</p>
+              <div class="social-media">
+                <a href="/auth/kakao" class="social-icon kakao" title="카카오 회원가입">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M12 3C6.48 3 2 6.58 2 11c0 2.8 1.8 5.28 4.5 6.75L5.7 21l3.8-2.25c.83.15 1.7.25 2.5.25 5.52 0 10-3.58 10-8S17.52 3 12 3z" />
+                  </svg>
+                </a>
+                <a href="/auth/naver" class="social-icon naver" title="네이버 회원가입">
+                  <span style="font-weight: bold; font-size: 16px;">N</span>
+                </a>
+                <a href="/auth/github" class="social-icon github" title="깃허브 회원가입">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385c.6.105.825-.255.825-.57c0-.285-.015-1.23-.015-2.235c-3.015.555-3.795-.735-4.035-1.41c-.135-.345-.72-1.41-1.23-1.695c-.42-.225-1.02-.78-.015-.795c.945-.015 1.62.87 1.845 1.23c1.08 1.815 2.805 1.305 3.495.99c.105-.78.42-1.305.765-1.605c-2.67-.3-5.46-1.335-5.46-5.925c0-1.305.465-2.385 1.23-3.225c-.12-.3-.54-1.53.12-3.18c0 0 1.005-.315 3.3 1.23c.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23c.66 1.65.24 2.88.12 3.18c.765.84 1.23 1.905 1.23 3.225c0 4.605-2.805 5.625-5.475 5.925c.435.375.81 1.095.81 2.22c0 1.605-.015 2.895-.015 3.3c0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
           </form>
 
         </div>
@@ -66,6 +125,22 @@
       </div>
     </div>
 
+    <!-- 비밀번호 재설정 모달 -->
+    <div id="forgot-password-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>비밀번호 재설정</h3>
+        <form id="forgot-password-form">
+          <div class="input-field">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="reset-email" placeholder="이메일 주소" required />
+          </div>
+          <button type="submit" class="btn solid">재설정 링크 발송</button>
+        </form>
+        <div id="reset-message" style="margin-top: 15px; text-align: center;"></div>
+      </div>
+    </div>
+
     <script>
       const sign_in_btn = document.querySelector("#sign-in-btn");
       const sign_up_btn = document.querySelector("#sign-up-btn");
@@ -79,13 +154,97 @@
         container.classList.remove("sign-up-mode");
       });
 
+      // URL 파라미터에서 에러 확인
+      const urlParams = new URLSearchParams(window.location.search);
+      const error = urlParams.get('error');
+      const errorMessage = document.getElementById('error-message');
+
+      if (error && errorMessage) {
+        let message = '';
+        switch (error) {
+          case 'kakao_not_configured':
+            message = '카카오 로그인이 설정되지 않았습니다. 관리자에게 문의하세요.';
+            break;
+          case 'kakao_failed':
+            message = '카카오 로그인에 실패했습니다. 다시 시도해주세요.';
+            break;
+          case 'naver_not_configured':
+            message = '네이버 로그인이 설정되지 않았습니다. 관리자에게 문의하세요.';
+            break;
+          case 'naver_failed':
+            message = '네이버 로그인에 실패했습니다. 다시 시도해주세요.';
+            break;
+          case 'github_not_configured':
+            message = '깃허브 로그인이 설정되지 않았습니다. 관리자에게 문의하세요.';
+            break;
+          case 'github_failed':
+            message = '깃허브 로그인에 실패했습니다. 다시 시도해주세요.';
+            break;
+          default:
+            message = '로그인 중 오류가 발생했습니다.';
+        }
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+      }
+
+      // 비밀번호 재설정 모달
+      const forgotPasswordLink = document.getElementById("forgot-password-link");
+      const forgotPasswordModal = document.getElementById("forgot-password-modal");
+      const closeModal = document.querySelector(".close");
+      const forgotPasswordForm = document.getElementById("forgot-password-form");
+      const resetMessage = document.getElementById("reset-message");
+
+      forgotPasswordLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        forgotPasswordModal.style.display = "block";
+      });
+
+      closeModal.addEventListener("click", () => {
+        forgotPasswordModal.style.display = "none";
+        resetMessage.innerHTML = "";
+      });
+
+      window.addEventListener("click", (e) => {
+        if (e.target === forgotPasswordModal) {
+          forgotPasswordModal.style.display = "none";
+          resetMessage.innerHTML = "";
+        }
+      });
+
+      forgotPasswordForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("reset-email").value;
+
+        try {
+          const response = await fetch("/auth/forgot-password", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ memberEmail: email }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            resetMessage.innerHTML = `<p style="color: #2ed573;">${data.message}</p>`;
+            forgotPasswordForm.reset();
+          } else {
+            resetMessage.innerHTML = `<p style="color: #ff4757;">${data.message}</p>`;
+          }
+        } catch (error) {
+          resetMessage.innerHTML = `<p style="color: #ff4757;">오류가 발생했습니다. 다시 시도해주세요.</p>`;
+        }
+      });
+
       function validateForm() {
         let memberNick = document.querySelector(".member-nick").value;
+        let memberEmail = document.querySelector(".member-email").value;
         let memberPhone = document.querySelector(".member-phone").value;
         let memberPassword = document.querySelector(".member-password").value;
         let confirmPassword = document.querySelector(".confirm-password").value;
 
-        if (!memberNick || !memberPhone || !memberPassword || !confirmPassword) {
+        if (!memberNick || !memberEmail || !memberPhone || !memberPassword || !confirmPassword) {
           alert("Fill in all required inputs");
           return false;
         }

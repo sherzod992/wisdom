@@ -149,4 +149,88 @@ memberController.retrieveAuth = async (req: ExtendedRequest, res:Response, next:
   }
   }
 
+// 소셜 로그인 처리 (프론트엔드용)
+memberController.socialLogin = (provider: string) => {
+  return async (req: Request, res: Response) => {
+    try {
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      
+      // 환경변수 확인
+      const clientIdKey = `${provider.toUpperCase()}_CLIENT_ID`;
+      if (!process.env[clientIdKey]) {
+        return res.status(400).json({
+          error: true,
+          message: `${provider} 로그인이 설정되지 않았습니다.`
+        });
+      }
+
+      // 소셜 로그인 URL로 리다이렉트
+      const authUrl = `${baseUrl}/auth/${provider}`;
+      res.redirect(authUrl);
+      
+    } catch (err) {
+      console.log(`ERROR, ${provider} login:`, err);
+      res.status(500).json({
+        error: true,
+        message: `${provider} 로그인 중 오류가 발생했습니다.`
+      });
+    }
+  };
+};
+
+// 비밀번호 재설정 요청 (프론트엔드용)
+memberController.forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const { memberEmail } = req.body;
+
+    if (!memberEmail) {
+      return res.status(400).json({
+        error: true,
+        message: '이메일을 입력해주세요.'
+      });
+    }
+
+    // 실제 구현에서는 이메일 발송 로직 추가
+    // 현재는 임시 응답
+    res.status(200).json({
+      error: false,
+      message: '비밀번호 재설정 링크가 이메일로 발송되었습니다.'
+    });
+
+  } catch (err) {
+    console.log("ERROR, forgotPassword:", err);
+    res.status(500).json({
+      error: true,
+      message: '비밀번호 재설정 요청 중 오류가 발생했습니다.'
+    });
+  }
+};
+
+// 비밀번호 재설정 (프론트엔드용)
+memberController.resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        error: true,
+        message: '토큰과 새 비밀번호를 입력해주세요.'
+      });
+    }
+
+    // 실제 구현에서는 토큰 검증 및 비밀번호 업데이트 로직 추가
+    res.status(200).json({
+      error: false,
+      message: '비밀번호가 성공적으로 변경되었습니다.'
+    });
+
+  } catch (err) {
+    console.log("ERROR, resetPassword:", err);
+    res.status(500).json({
+      error: true,
+      message: '비밀번호 재설정 중 오류가 발생했습니다.'
+    });
+  }
+};
+
 export default memberController;

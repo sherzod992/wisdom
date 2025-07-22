@@ -35,6 +35,8 @@ $(function () {
 
 
 
+
+
   // update lesson status
   $(".new-product-status").on("change", async function (e) {
     const id = e.target.id;
@@ -329,6 +331,8 @@ function clearFormData() {
   $(".image-preview-container").removeClass('has-image');
   $(".upload-icon").attr('src', '/img/upload.svg');
 }
+
+
 
 
 
